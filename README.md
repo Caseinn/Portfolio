@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).It utilizes [React](https://react.dev/) for building user interfaces, [TypeScript](https://www.typescriptlang.org/) for type safety, and [Tailwind CSS](https://tailwindcss.com/) for styling.
 
 ## Getting Started
 
@@ -26,6 +26,9 @@ To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Learn React](https://react.dev/learn) - Discover how to work with React..
+- [TypeScript Documentation](https://tailwindcss.com/docs/installation) - Learn about using TypeScript for type safety.
+- [Tailwind CSS Documentation](https://www.typescriptlang.org/docs/) - Learn how to use Tailwind CSS for styling.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
