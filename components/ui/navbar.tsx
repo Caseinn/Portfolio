@@ -9,14 +9,14 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export const FloatingNav = ({
+export const Navbar = ({
   navItems,
   className,
 }: {
   navItems: {
     name: string;
     link: string;
-    icon?: JSX.Element;
+    icon?: React.ReactNode;
   }[];
   className?: string;
 }) => {
@@ -63,7 +63,7 @@ export const FloatingNav = ({
         {navItems.map((navItem: {
     name: string;
     link: string;
-    icon?: JSX.Element;
+    icon?: React.ReactNode;
   }, idx: number) => (
           <Link
             key={`link=${idx}`}

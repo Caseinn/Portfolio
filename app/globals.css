@@ -1,93 +1,165 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+/* ---------- Theme tokens ---------- */
+:root {
+  color-scheme: dark;          /* avoid white flash */
+  --background: #0a0a0a;
+  --foreground: #ededed;
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+  --card: #0a0a0a;
+  --card-foreground: #ededed;
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+  --popover: #0a0a0a;
+  --popover-foreground: #ededed;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
 
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
 
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-  }
+  --radius: 0.5rem;
 }
 
+/* If your build supports @theme inline, you can use it; plain @theme works too */
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  /* custom palette used by your classes (bg-black-100, text-blue-100, etc.) */
+  --color-black-100: #000319;
+  --color-black-200: rgba(17, 25, 40, .75);
+  --color-black-300: rgba(255, 255, 255, .125);
+
+  --color-white-100: #bec1dd;
+  --color-white-200: #c1c2d3;
+
+  --color-blue-100: #e4ecff;
+  --color-purple: #cbacf9;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+/* Optional: light override when you add a toggle */
+.light {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #0b0b0b;
+}
+
+/* Base */
 @layer base {
-  * {
-    @apply border-border !scroll-smooth;
-  }
+  * { @apply border-border; }
   body {
-    @apply bg-background text-foreground;
+    background: var(--background);
+    color: var(--foreground);
   }
-  button {
-    @apply active:outline-none;
-  }
+  button { @apply active:outline-none; }
 }
 
+/* Utilities */
 @layer utilities {
-  .heading {
-    @apply font-bold text-4xl md:text-5xl text-center;
-  }
+  .heading { @apply font-bold text-4xl md:text-5xl text-center; }
+  .black-gradient { background: linear-gradient(90deg, #161a31 0%, #06091f 100%); }
 
-  .black-gradient {
-    background: linear-gradient(90deg, #161a31 0%, #06091f 100%);
+  /* RESIZABLE grid backgrounds (use helpers below) */
+  .bg-grid-white {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.12) var(--grid-stroke,1px), transparent var(--grid-stroke,1px)),
+      linear-gradient(to bottom, rgba(255,255,255,0.12) var(--grid-stroke,1px), transparent var(--grid-stroke,1px));
+    background-size:
+      var(--grid-size,40px) var(--grid-size,40px),
+      var(--grid-size,40px) var(--grid-size,40px);
+    background-repeat: repeat, repeat;
+    background-position: top left, top left;
+  }
+  .bg-grid-black {
+    background-image:
+      linear-gradient(to right, rgba(0,0,0,0.20) var(--grid-stroke,1px), transparent var(--grid-stroke,1px)),
+      linear-gradient(to bottom, rgba(0,0,0,0.20) var(--grid-stroke,1px), transparent var(--grid-stroke,1px));
+    background-size:
+      var(--grid-size,40px) var(--grid-size,40px),
+      var(--grid-size,40px) var(--grid-size,40px);
+    background-repeat: repeat, repeat;
+    background-position: top left, top left;
   }
 }
 
-::-webkit-scrollbar{
-  width: 0px;
+/* Scrollbar */
+::-webkit-scrollbar { width: 0px; }
+
+/* Animations */
+@keyframes spotlight {
+  0% { opacity: 0; transform: translate(-72%, -62%) scale(.5); }
+  100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
 }
+@keyframes moveVertical {
+  0% { transform: translateY(-50%); }
+  50% { transform: translateY(50%); }
+  100% { transform: translateY(-50%); }
+}
+@keyframes moveInCircle {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes moveHorizontal {
+  0% { transform: translateX(-50%) translateY(-10%); }
+  50% { transform: translateX(50%) translateY(10%); }
+  100% { transform: translateX(-50%) translateY(-10%); }
+}
+
+/* animation utilities (TOP-LEVEL in v4) */
+@utility animate-spotlight { animation: spotlight 2s ease .75s 1 forwards; }
+@utility animate-first      { animation: moveVertical 30s ease infinite; }
+@utility animate-second     { animation: moveInCircle 20s reverse infinite; }
+@utility animate-third      { animation: moveInCircle 40s linear infinite; }
+@utility animate-fourth     { animation: moveHorizontal 40s ease infinite; }
+@utility animate-fifth      { animation: moveInCircle 20s ease infinite; }
+
+/* grid size/stroke helpers (TOP-LEVEL in v4) */
+@utility grid-40   { --grid-size: 40px; }
+@utility grid-64   { --grid-size: 64px; }
+@utility grid-80   { --grid-size: 80px; }
+@utility grid-98   { --grid-size: 98px; }
+@utility grid-128  { --grid-size: 128px; }
+
+@utility grid-stroke-1 { --grid-stroke: 1px; }
+@utility grid-stroke-2 { --grid-stroke: 2px; }
+@utility grid-stroke-3 { --grid-stroke: 3px; }

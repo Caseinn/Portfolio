@@ -1,3 +1,5 @@
+import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
+
 export const navItems = [
     { name: "About", link: "#about" },
     { name: "Projects", link: "#projects" },
@@ -137,20 +139,20 @@ export const navItems = [
   ];
   
   
-  export const socialMedia = [
-    {
-      id: 1,
-      img: "/git.svg",
-      url: "https://github.com/Caseinn",
-    },
-    {
-      id: 2,
-      img: "/insta.svg",
-      url: "https://instagram.com/ditorifkii",
-    },
-    {
-      id: 3,
-      img: "/link.svg",
-      url: "https://www.linkedin.com/in/ditorifkiirawan/",
-    },
-  ];
+export const socialMedia = [
+  {
+    id: 1,
+    icon: FaGithub,
+    url: "https://github.com/Caseinn",
+  },
+  {
+    id: 2,
+    icon: FaInstagram,
+    url: "https://instagram.com/ditorifkii",
+  },
+  {
+    id: 3,
+    icon: FaLinkedin,
+    url: "https://www.linkedin.com/in/ditorifkiirawan/",
+  },
+];
