@@ -16,7 +16,7 @@ const MagicButton = ({
 }) => {
   return (
     <Magnet
-      magnetStrength={3}
+      magnetStrength={5}
       className="inline-block"
     >
       <button

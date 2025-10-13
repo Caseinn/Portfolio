@@ -60,7 +60,7 @@ export default function RoundedButton({
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
         className={cn(
-          "relative flex cursor-pointer items-center justify-center overflow-hidden rounded-full border border-neutral-500 px-10 py-3 transition-colors duration-300 hover:text-white",
+          "relative flex cursor-pointer items-center justify-center overflow-hidden rounded-full border border-neutral-500 px-10 py-3 transition-colors duration-300 text-white",
           className
         )}
         {...props}

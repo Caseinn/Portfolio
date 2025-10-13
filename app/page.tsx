@@ -1,5 +1,6 @@
 import Hero from "@/components/hero-section";
 import Description from "@/components/description-section";
+import Projects from "@/components/project-section";
 import Footer from "@/components/ui/footer";
 import { Navbar } from "@/components/ui/navbar";
 
@@ -15,6 +16,7 @@ export default function Home() {
         <Navbar navItems={navItems}/>
         <Hero />
         <Description />
+        <Projects />
         <Footer />
       </div>
     </main>
