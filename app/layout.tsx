@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "./provider";
 import SplashCursor from "@/components/ui/splash-cursor";
+import LenisController from "@/components/ui/lenis-controller";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,6 +41,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <LenisController />
           {children}
           <SplashCursor />
         </ThemeProvider>
