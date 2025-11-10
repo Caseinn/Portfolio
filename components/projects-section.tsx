@@ -15,10 +15,10 @@ type Project = {
 };
 
 const PROJECTS: Project[] = [
-  { title: "Portfolio", src: "/projects/p1.png", color: "#0b0b0b", role: "Design & Development" },
-  { title: "PPLK ITERA 2024", src: "/projects/p2.png", color: "#111318", role: "Development" },
-  { title: "HarusGerak", src: "/projects/p3.png", color: "#14161d", role: "Design & Development" },
-  { title: "Ghost Jump", src: "/projects/p4.png", color: "#1b1e27", role: "Design & Development" },
+  { title: "Portfolio", src: "/projects/p1.webp", color: "#0b0b0b", role: "Design & Development" },
+  { title: "PPLK ITERA 2024", src: "/projects/p2.webp", color: "#111318", role: "Development" },
+  { title: "HarusGerak", src: "/projects/p3.webp", color: "#14161d", role: "Design & Development" },
+  { title: "Ghost Jump", src: "/projects/p4.webp", color: "#1b1e27", role: "Design & Development" },
 ];
 
 const scaleVariant: Variants = {
