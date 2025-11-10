@@ -74,27 +74,41 @@ function ProjectRow({
   );
 }
 
+/** MOBILE TWEAK: friendlier accordion with bigger taps, clearer active, and smoother animation */
 function MobileAccordion({ projects }: { projects: Project[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  const prefersReduced =
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
   return (
-    <div className="w-full">
+    <div className="w-full space-y-3"> {/* MOBILE TWEAK: consistent spacing */}
       {projects.map((p, i) => {
         const isOpen = openIndex === i;
         return (
           <div
             key={p.title}
-            className="mb-3 overflow-hidden rounded-2xl border border-white/10 bg-black/30"
+            className="overflow-hidden rounded-2xl border border-white/10 bg-black/30"
           >
             <button
               onClick={() => setOpenIndex(isOpen ? null : i)}
-              className="flex w-full items-center justify-between px-4 py-4 text-left text-white focus:outline-none"
+              className={[
+                // MOBILE TWEAK: bigger tap target, nicer layout
+                "flex w-full items-center justify-between gap-3 px-4 py-4",
+                "text-left text-white select-none",
+                "active:scale-[0.99] transition-transform duration-150 ease-out",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 rounded-2xl",
+              ].join(" ")}
+              aria-expanded={isOpen}
+              aria-controls={`acc-panel-${i}`}
             >
-              <span className="font-semibold">{p.title}</span>
+              <span className="font-semibold text-[15px] leading-6">{p.title}</span>
               <ChevronRight
-                className={`h-5 w-5 transform transition-transform duration-300 ${
-                  isOpen ? "rotate-90 text-purple-400" : "text-white/70"
-                }`}
+                className={[
+                  "h-5 w-5 shrink-0 transform transition-transform duration-300",
+                  isOpen ? "rotate-90 text-purple-400" : "text-white/70",
+                ].join(" ")}
               />
             </button>
 
@@ -102,10 +116,15 @@ function MobileAccordion({ projects }: { projects: Project[] }) {
               {isOpen && (
                 <motion.div
                   key="content"
+                  id={`acc-panel-${i}`}
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  transition={
+                    prefersReduced
+                      ? { duration: 0.001 }
+                      : { duration: 0.32, ease: "easeOut" }
+                  }
                   className="overflow-hidden"
                 >
                   <div className="px-4 pb-4">
@@ -119,6 +138,8 @@ function MobileAccordion({ projects }: { projects: Project[] }) {
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 50vw"
+                        loading="lazy"                 // MOBILE TWEAK: lazy for perf
+                        priority={false}
                       />
                     </div>
                     <p className="mt-2 text-xs text-white/70">{p.role}</p>
@@ -156,43 +177,50 @@ export default function ProjectsSection() {
     setModal({ active: isActive, index: i });
   };
 
-  // ✅ Type-safe listener
   useEffect(() => {
     if (!active) return;
-
-    const onMove = (e: globalThis.MouseEvent) => {
-      move(e.clientX, e.clientY);
-    };
-
+    const onMove = (e: globalThis.MouseEvent) => move(e.clientX, e.clientY);
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
   }, [active]);
 
   return (
     <section
-      className="relative mt-46 flex flex-col items-center"
+      className={[
+        "relative flex flex-col items-center",
+        // MOBILE TWEAK: comfy side gutters & safe-area top; keep your original top margin
+        "px-4 md:px-6",
+        "pt-[calc(env(safe-area-inset-top,0px))]",
+        "mt-46",
+      ].join(" ")}
       onMouseMove={(e) => active && move(e.clientX, e.clientY)}
     >
-      {/* Desktop list */}
+      {/* Desktop list (unchanged) */}
       <div className="mx-auto mb-16 hidden w-full max-w-7xl md:block">
         {PROJECTS.map((p, i) => (
-          <ProjectRow key={p.title} index={i} title={p.title} role={p.role} onHoverChange={handleHover} />
+          <ProjectRow
+            key={p.title}
+            index={i}
+            title={p.title}
+            role={p.role}
+            onHoverChange={handleHover}
+          />
         ))}
       </div>
 
-      {/* Mobile accordion */}
-      <div className="mx-auto mb-16 w-full max-w-7xl md:hidden">
+      {/* Mobile accordion (improved) */}
+      <div className="mx-auto mb-16 w-full max-w-2xl md:hidden">{/* MOBILE TWEAK: better max width */}
         <MobileAccordion projects={PROJECTS} />
       </div>
 
-      {/* CTA */}
-      <div className="mt-6">
+      {/* CTA (small spacing tweaks for mobile rhythm) */}
+      <div className="mt-4 md:mt-6">
         <RoundedButton backgroundColor="#6366F1">
           <p>More Work</p>
         </RoundedButton>
       </div>
 
-      {/* Hover Modal */}
+      {/* Hover Modal (disabled on touch as before) */}
       {!isTouch && (
         <div
           ref={modalWrap}
