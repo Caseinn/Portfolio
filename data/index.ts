@@ -25,3 +25,17 @@ export const socialMedia = [
     url: "https://www.linkedin.com/in/ditorifkiirawan/",
   },
 ];
+
+export const projects = [
+  { title: "Portfolio", src: "/projects/p1.webp", role: "Design & Development" },
+  { title: "GKA Energy", src: "/projects/p5.webp", role: "Design & Development" },
+  { title: "SuaraAziz", src: "/projects/p10.webp", role: "Design & Development" },
+  { title: "Praktikum ASD", src: "/projects/p6.webp", role: "Design & Development" },
+  { title: "Duotone Filter", src: "/projects/p8.webp", role: "Design & Development" },
+  { title: "EduSolver", src: "/projects/p7.webp", role: "Design & Development" },
+  { title: "Nel's Kitchen", src: "/projects/p9.webp", role: "Design & Development" },
+  { title: "Wisata Suka Marga", src: "/projects/p11.webp", role: "Development" },
+  { title: "HarusGerak", src: "/projects/p3.webp", role: "Design & Development" },
+  { title: "PPLK ITERA 2024", src: "/projects/p2.webp", role: "Development" },
+  { title: "Ghost Jump", src: "/projects/p4.webp", role: "Design & Development" },
+];

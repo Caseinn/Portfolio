@@ -1,262 +1,259 @@
-"use client";
+  "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import gsap from "gsap";
-import { motion, Variants, AnimatePresence } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+  import React, { useEffect, useRef, useState } from "react";
+  import Image from "next/image";
+  import gsap from "gsap";
+  import { motion, Variants, AnimatePresence } from "framer-motion";
+  import { ChevronRight } from "lucide-react";
+  import { projects } from "@/data";
 
-type Project = {
-  title: string;
-  src: string;
-  color?: string;
-  role?: string;
-};
-
-const PROJECTS: Project[] = [
-  { title: "Portfolio", src: "/projects/p1.webp", role: "Design & Development" },
-  { title: "GKA Energy", src: "/projects/p5.webp", role: "Design & Development" },
-  { title: "SuaraAziz", src: "/projects/p10.webp", role: "Design & Development" },
-  { title: "Praktikum ASD", src: "/projects/p6.webp", role: "Design & Development" },
-  { title: "Duotone Filter", src: "/projects/p8.webp", role: "Design & Development" },
-  { title: "EduSolver", src: "/projects/p7.webp", role: "Design & Development" },
-  { title: "Nel's Kitchen", src: "/projects/p9.webp", role: "Design & Development" },
-  { title: "Wisata Suka Marga", src: "/projects/p11.webp", role: "Development" },
-  { title: "HarusGerak", src: "/projects/p3.webp", role: "Design & Development" },
-  { title: "PPLK ITERA 2024", src: "/projects/p2.webp", role: "Development" },
-  { title: "Ghost Jump", src: "/projects/p4.webp", role: "Design & Development" },
-];
-
-const scaleVariant: Variants = {
-  initial: { scale: 0 },
-  enter: { scale: 1, transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] } },
-  closed: { scale: 0, transition: { duration: 0.3, ease: [0.32, 0, 0.67, 0] } },
-};
-
-function useIsTouch(): boolean {
-  const [isTouch, setIsTouch] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setIsTouch(
-      window.matchMedia("(pointer: coarse)").matches ||
-        "ontouchstart" in window ||
-        navigator.maxTouchPoints > 0
-    );
-  }, []);
-  return isTouch;
-}
-
-function ProjectRow({
-  index,
-  title,
-  role,
-  onHoverChange,
-  disabled,
-}: {
-  index: number;
-  title: string;
-  role?: string;
-  onHoverChange: (active: boolean, idx: number, x: number, y: number) => void;
-  disabled?: boolean;
-}) {
-  const handleEnter = (e: React.MouseEvent<HTMLDivElement>) =>
-    !disabled && onHoverChange(true, index, e.clientX, e.clientY);
-  const handleLeave = (e: React.MouseEvent<HTMLDivElement>) =>
-    !disabled && onHoverChange(false, index, e.clientX, e.clientY);
-
-  return (
-    <div
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      className="group flex w-full items-center justify-between border-t border-white/20 px-6 md:px-24 py-10 md:py-14 cursor-pointer transition-opacity duration-200 last:border-b hover:opacity-60"
-    >
-      <h2 className="m-0 bg-gradient-to-r from-purple-300 to-purple-400 bg-clip-text text-transparent text-[30px] md:text-[60px] font-normal leading-none transition-transform duration-300 group-hover:-translate-x-2">
-        {title}
-      </h2>
-      <p className="m-0 hidden text-white/70 font-light transition-transform duration-300 group-hover:translate-x-2 md:block">
-        {role}
-      </p>
-    </div>
-  );
-}
-
-/** MOBILE TWEAK: friendlier accordion with bigger taps, clearer active, and smoother animation */
-function MobileAccordion({ projects }: { projects: Project[] }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const prefersReduced =
-    typeof window !== "undefined" &&
-    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-  return (
-    <div className="w-full space-y-3"> {/* MOBILE TWEAK: consistent spacing */}
-      {projects.map((p, i) => {
-        const isOpen = openIndex === i;
-        return (
-          <div
-            key={p.title}
-            className="overflow-hidden rounded-2xl border border-white/10 bg-black/30"
-          >
-            <button
-              onClick={() => setOpenIndex(isOpen ? null : i)}
-              className={[
-                // MOBILE TWEAK: bigger tap target, nicer layout
-                "flex w-full items-center justify-between gap-3 px-4 py-4",
-                "text-left text-white select-none",
-                "active:scale-[0.99] transition-transform duration-150 ease-out",
-                "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 rounded-2xl",
-              ].join(" ")}
-              aria-expanded={isOpen}
-              aria-controls={`acc-panel-${i}`}
-            >
-              <span className="font-semibold text-[15px] leading-6">{p.title}</span>
-              <ChevronRight
-                className={[
-                  "h-5 w-5 shrink-0 transform transition-transform duration-300",
-                  isOpen ? "rotate-90 text-purple-400" : "text-white/70",
-                ].join(" ")}
-              />
-            </button>
-
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  key="content"
-                  id={`acc-panel-${i}`}
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={
-                    prefersReduced
-                      ? { duration: 0.001 }
-                      : { duration: 0.32, ease: "easeOut" }
-                  }
-                  className="overflow-hidden"
-                >
-                  <div className="px-4 pb-4">
-                    <div
-                      className="relative aspect-[16/10] w-full overflow-hidden rounded-xl ring-1 ring-white/10"
-                      style={{ backgroundColor: p.color }}
-                    >
-                      <Image
-                        src={p.src}
-                        alt={p.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        loading="lazy"                 // MOBILE TWEAK: lazy for perf
-                        priority={false}
-                      />
-                    </div>
-                    <p className="mt-2 text-xs text-white/70">{p.role}</p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-export default function ProjectsSection() {
-  const isTouch = useIsTouch();
-  const [modal, setModal] = useState({ active: false, index: 0 });
-  const { active, index } = modal;
-  const modalWrap = useRef<HTMLDivElement>(null);
-
-  const move = (x: number, y: number) => {
-    const el = modalWrap.current;
-    if (!el) return;
-    gsap.to(el, {
-      left: x,
-      top: y,
-      duration: 0.18,
-      ease: "power3.out",
-      overwrite: "auto",
-    });
+  type Project = {
+    title: string;
+    src: string;
+    color?: string;
+    role?: string;
   };
 
-  const handleHover = (isActive: boolean, i: number, x: number, y: number) => {
-    move(x, y);
-    setModal({ active: isActive, index: i });
+  const scaleVariant: Variants = {
+    initial: { scale: 0 },
+    enter: {
+      scale: 1,
+      transition: { duration: 0.35, ease: [0.76, 0, 0.24, 1] },
+    },
+    closed: {
+      scale: 0,
+      transition: { duration: 0.25, ease: [0.32, 0, 0.67, 0] },
+    },
   };
 
-  useEffect(() => {
-    if (!active) return;
-    const onMove = (e: globalThis.MouseEvent) => move(e.clientX, e.clientY);
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [active]);
+  function useIsTouch(): boolean {
+    const [isTouch, setIsTouch] = useState(false);
 
-  return (
-    <section
-      className={[
-        "relative flex flex-col items-center",
-        // MOBILE TWEAK: comfy side gutters & safe-area top; keep your original top margin
-        "px-4 md:px-6",
-        "pt-[calc(env(safe-area-inset-top,0px))]",
-        "mt-46",
-      ].join(" ")}
-      onMouseMove={(e) => active && move(e.clientX, e.clientY)}
-      id="projects"
-    >
-      {/* Desktop list (unchanged) */}
-      <div className="mx-auto mb-16 hidden w-full max-w-7xl md:block">
-        {PROJECTS.map((p, i) => (
-          <ProjectRow
-            key={p.title}
-            index={i}
-            title={p.title}
-            role={p.role}
-            onHoverChange={handleHover}
-          />
-        ))}
-      </div>
+    useEffect(() => {
+      if (typeof window === "undefined") return;
+      setIsTouch(
+        window.matchMedia("(pointer: coarse)").matches ||
+          navigator.maxTouchPoints > 0
+      );
+    }, []);
 
-      {/* Mobile accordion (improved) */}
-      <div className="mx-auto mb-16 w-full max-w-2xl md:hidden">{/* MOBILE TWEAK: better max width */}
-        <MobileAccordion projects={PROJECTS} />
-      </div>
+    return isTouch;
+  }
 
-      {/* Hover Modal (disabled on touch as before) */}
-      {!isTouch && (
-        <div
-          ref={modalWrap}
-          className="fixed pointer-events-none z-40 -translate-x-1/2 -translate-y-1/2"
-          style={{ top: "50%", left: "50%" }}
+  /* --------------------------------------- */
+  /* DESKTOP ROW — role moved to end         */
+  /* --------------------------------------- */
+  function ProjectRow({
+    index,
+    title,
+    role,
+    onHoverChange,
+  }: {
+    index: number;
+    title: string;
+    role?: string;
+    onHoverChange: (active: boolean, idx: number, x: number, y: number) => void;
+  }) {
+    const handleEnter = (e: React.MouseEvent<HTMLDivElement>) =>
+      onHoverChange(true, index, e.clientX, e.clientY);
+
+    const handleLeave = (e: React.MouseEvent<HTMLDivElement>) =>
+      onHoverChange(false, index, e.clientX, e.clientY);
+
+    return (
+      <div
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+        className="group relative flex w-full items-center justify-between rounded-3xl 
+        border border-white/10 bg-white/[0.03] px-6 py-8
+        transition-all duration-300 hover:bg-white/[0.05]"
+      >
+        {/* Left: Title */}
+        <h3
+          className="
+            text-3xl md:text-[40px] font-semibold text-white
+            transition-colors duration-300
+            group-hover:text-purple-300
+          "
         >
-          <motion.div
-            variants={scaleVariant}
-            initial="initial"
-            animate={active ? "enter" : "closed"}
-            className="w-[360px] h-[225px] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10 bg-black/80 transition-transform duration-300 ease-out"
-          >
+          {title}
+        </h3>
+
+        {/* Right: Role */}
+        <p className="mt-1 text-sm uppercase tracking-[0.25em] text-white/50 text-right">
+          {role ?? "Design & Development"}
+        </p>
+      </div>
+    );
+  }
+
+  /* --------------------------------------- */
+  /* MOBILE ACCORDION (unchanged)           */
+  /* --------------------------------------- */
+  function MobileAccordion({ projects }: { projects: Project[] }) {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    return (
+      <div className="w-full space-y-4">
+        {projects.map((p, i) => {
+          const isOpen = openIndex === i;
+          const focusLabel = p.role ?? "Design & Development";
+
+          return (
             <div
-              className="relative h-full w-full transition-[top] duration-500 [transition-timing-function:cubic-bezier(0.76,0,0.24,1)]"
-              style={{ top: `${index * -100}%` }}
+              key={p.title}
+              className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]"
             >
-              {PROJECTS.map((p, i) => (
-                <div
-                  key={`modal_${i}`}
-                  className="flex h-full w-full items-center justify-center"
-                  style={{ backgroundColor: p.color }}
-                >
-                  <Image
-                    src={p.src}
-                    alt={p.title}
-                    width={360}
-                    height={225}
-                    className="h-full w-full object-cover"
-                    priority={i === 0}
-                  />
+              <button
+                onClick={() => setOpenIndex(isOpen ? null : i)}
+                className="flex w-full items-center justify-between gap-4 px-5 py-5
+                text-left text-white"
+              >
+                <div>
+                  <p className="text-lg font-semibold">{p.title}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.25em] text-white/50">
+                    {focusLabel}
+                  </p>
                 </div>
-              ))}
+
+                <ChevronRight
+                  className={`h-5 w-5 transition-transform duration-300 ${
+                    isOpen ? "rotate-90 text-purple-400" : "text-white/60"
+                  }`}
+                />
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="px-5 pb-5 space-y-3">
+                      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl ring-1 ring-white/10">
+                        <Image
+                          src={p.src}
+                          alt={p.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <p className="text-sm text-white/70">{focusLabel}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </motion.div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  /* --------------------------------------- */
+  /* MAIN SECTION — Now includes "Recent Works" */
+  /* --------------------------------------- */
+  export default function ProjectsSection() {
+    const isTouch = useIsTouch();
+    const [modal, setModal] = useState({ active: false, index: 0 });
+    const modalRef = useRef<HTMLDivElement>(null);
+
+    const move = (x: number, y: number) => {
+      const el = modalRef.current;
+      if (!el) return;
+
+      gsap.to(el, {
+        left: x,
+        top: y,
+        duration: 0.18,
+        ease: "power3.out",
+      });
+    };
+
+    const handleHover = (
+      active: boolean,
+      index: number,
+      x: number,
+      y: number
+    ) => {
+      setModal({ active, index });
+      move(x, y);
+    };
+
+    useEffect(() => {
+      if (!modal.active) return;
+
+      const onMove = (e: MouseEvent) => move(e.clientX, e.clientY);
+      window.addEventListener("mousemove", onMove);
+
+      return () => window.removeEventListener("mousemove", onMove);
+    }, [modal.active]);
+
+    return (
+      <section
+        id="projects"
+        className="relative flex flex-col items-center px-4 py-20 md:px-6"
+        onMouseMove={(e) => modal.active && move(e.clientX, e.clientY)}
+      >
+        {/* Section Title */}
+        <h2 className="text-3xl md:text-4xl font-semibold text-white mb-12 tracking-tight">
+          Recent Works
+        </h2>
+
+        {/* Desktop List */}
+        <div className="mx-auto w-full max-w-6xl space-y-6 hidden md:block">
+          {projects.map((p, i) => (
+            <ProjectRow
+              key={p.title}
+              index={i}
+              title={p.title}
+              role={p.role}
+              onHoverChange={handleHover}
+            />
+          ))}
         </div>
-      )}
-    </section>
-  );
-}
+
+        {/* Mobile Accordion */}
+        <div className="mx-auto mt-10 w-full max-w-2xl md:hidden">
+          <MobileAccordion projects={projects} />
+        </div>
+
+        {/* Hover Modal */}
+        {!isTouch && (
+          <div
+            ref={modalRef}
+            className="pointer-events-none fixed z-40 -translate-x-1/2 -translate-y-1/2"
+            style={{ top: "50%", left: "50%" }}
+          >
+            <motion.div
+              variants={scaleVariant}
+              initial="initial"
+              animate={modal.active ? "enter" : "closed"}
+              className="h-[240px] w-[380px] overflow-hidden rounded-3xl border border-white/15 
+              bg-black/80 shadow-[0_25px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+            >
+              <div
+                className="relative h-full w-full transition-[top] duration-500 
+                [transition-timing-function:cubic-bezier(0.76,0,0.24,1)]"
+                style={{ top: `${modal.index * -100}%` }}
+              >
+                {projects.map((p, i) => (
+                  <div key={i} className="flex h-full w-full">
+                    <Image
+                      src={p.src}
+                      alt={p.title}
+                      width={380}
+                      height={240}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </section>
+    );
+  }
