@@ -10,15 +10,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { navItems } from "@/data"; // ⬅️ PENTING: langsung import di sini
+import { navItems } from "@/data";
 import type { IconType } from "react-icons";
-
-// optional: type lokal kalau mau
-type NavItem = {
-  name: string;
-  link: string;
-  icon?: IconType;
-};
 
 export const Navbar = ({ className }: { className?: string }) => {
   const { scrollYProgress } = useScroll();

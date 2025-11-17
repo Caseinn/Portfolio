@@ -6,9 +6,6 @@ import { Navbar } from "@/components/ui/navbar";
 import LogoMarquee from "@/components/marquee-section";
 // import Preloader from "@/components/ui/preloader";
 
-import { navItems } from "@/data";
-
-
 export default function Home() {
   return (
     <main className="relative bg-black-100 flex justify-center items-center flex-col mx-auto overflow-clip">

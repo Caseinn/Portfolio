@@ -12,6 +12,7 @@
     src: string;
     color?: string;
     role?: string;
+    url?: string;
   };
 
   const scaleVariant: Variants = {
@@ -40,34 +41,35 @@
     return isTouch;
   }
 
-  /* --------------------------------------- */
-  /* DESKTOP ROW — role moved to end         */
-  /* --------------------------------------- */
   function ProjectRow({
     index,
     title,
     role,
+    url,
     onHoverChange,
   }: {
     index: number;
     title: string;
     role?: string;
+    url?: string;
     onHoverChange: (active: boolean, idx: number, x: number, y: number) => void;
   }) {
-    const handleEnter = (e: React.MouseEvent<HTMLDivElement>) =>
+    const handleEnter = (e: React.MouseEvent<HTMLElement>) =>
       onHoverChange(true, index, e.clientX, e.clientY);
 
-    const handleLeave = (e: React.MouseEvent<HTMLDivElement>) =>
+    const handleLeave = (e: React.MouseEvent<HTMLElement>) =>
       onHoverChange(false, index, e.clientX, e.clientY);
 
-    return (
-      <div
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
-        className="group relative flex w-full items-center justify-between rounded-3xl 
+    const commonProps = {
+      onMouseEnter: handleEnter,
+      onMouseLeave: handleLeave,
+      className: `group relative flex w-full items-center justify-between rounded-3xl 
         border border-white/10 bg-white/[0.03] px-6 py-8
-        transition-all duration-300 hover:bg-white/[0.05]"
-      >
+        transition-all duration-300 hover:bg-white/[0.05]${url ? " cursor-pointer" : ""}`,
+    };
+
+    const content = (
+      <>
         {/* Left: Title */}
         <h3
           className="
@@ -83,13 +85,25 @@
         <p className="mt-1 text-sm uppercase tracking-[0.25em] text-white/50 text-right">
           {role ?? "Design & Development"}
         </p>
-      </div>
+      </>
     );
+
+    if (url) {
+      return (
+        <a
+          {...commonProps}
+          href={url}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          {content}
+        </a>
+      );
+    }
+
+    return <div {...commonProps}>{content}</div>;
   }
 
-  /* --------------------------------------- */
-  /* MOBILE ACCORDION (unchanged)           */
-  /* --------------------------------------- */
   function MobileAccordion({ projects }: { projects: Project[] }) {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -141,6 +155,16 @@
                         />
                       </div>
                       <p className="text-sm text-white/70">{focusLabel}</p>
+                      {p.url && (
+                        <a
+                          href={p.url}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="inline-flex text-sm font-semibold text-purple-300 hover:text-purple-200"
+                        >
+                          Visit site
+                        </a>
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -152,9 +176,6 @@
     );
   }
 
-  /* --------------------------------------- */
-  /* MAIN SECTION — Now includes "Recent Works" */
-  /* --------------------------------------- */
   export default function ProjectsSection() {
     const isTouch = useIsTouch();
     const [modal, setModal] = useState({ active: false, index: 0 });
@@ -199,7 +220,7 @@
       >
         {/* Section Title */}
         <h2 className="text-3xl md:text-4xl font-semibold text-white mb-12 tracking-tight">
-          Recent Works
+          Recent Projects
         </h2>
 
         {/* Desktop List */}
@@ -210,6 +231,7 @@
               index={i}
               title={p.title}
               role={p.role}
+              url={p.url}
               onHoverChange={handleHover}
             />
           ))}
