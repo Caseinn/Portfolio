@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     siteName: "Caseinn",
     images: [
       {
-        url: "/me.jpeg",
+        url: "/me.webp",
         width: 1200,
         height: 630,
         alt: "Portrait of Dito Rifki Irawan (Caseinn)",
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     title: "Caseinn | Portfolio of Dito Rifki Irawan",
     description:
       "Explore the projects and skills of Dito Rifki Irawan, also known as Caseinn.",
-    images: ["/me.jpeg"],
+    images: ["/me.webp"],
   },
   alternates: {
     canonical: siteUrl,
@@ -103,6 +103,11 @@ export default function RootLayout({
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: jsonLd }}
+        />
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
         />
       </head>
       <body

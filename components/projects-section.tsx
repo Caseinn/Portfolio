@@ -16,8 +16,14 @@ type Project = {
 
 const PROJECTS: Project[] = [
   { title: "Portfolio", src: "/projects/p1.webp", color: "#0b0b0b", role: "Design & Development" },
-  { title: "PPLK ITERA 2024", src: "/projects/p2.webp", color: "#111318", role: "Development" },
+  { title: "GKA Energy", src: "/projects/p5.webp", color: "#1b1e27", role: "Design & Development" },
+  { title: "SuaraAziz", src: "/projects/p10.webp", color: "#1b1e27", role: "Design & Development" },
+  { title: "Praktikum ASD", src: "/projects/p6.webp", color: "#1b1e27", role: "Design & Development" },
+  { title: "Duotone Filter", src: "/projects/p8.webp", color: "#1b1e27", role: "Design & Development" },
+  { title: "EduSolver", src: "/projects/p7.webp", color: "#1b1e27", role: "Design & Development" },
+  { title: "Nel's Kitchen", src: "/projects/p4.webp", color: "#1b1e27", role: "Design & Development" },
   { title: "HarusGerak", src: "/projects/p3.webp", color: "#14161d", role: "Design & Development" },
+  { title: "PPLK ITERA 2024", src: "/projects/p2.webp", color: "#111318", role: "Development" },
   { title: "Ghost Jump", src: "/projects/p4.webp", color: "#1b1e27", role: "Design & Development" },
 ];
 
@@ -194,6 +200,7 @@ export default function ProjectsSection() {
         "mt-46",
       ].join(" ")}
       onMouseMove={(e) => active && move(e.clientX, e.clientY)}
+      id="projects"
     >
       {/* Desktop list (unchanged) */}
       <div className="mx-auto mb-16 hidden w-full max-w-7xl md:block">
@@ -211,13 +218,6 @@ export default function ProjectsSection() {
       {/* Mobile accordion (improved) */}
       <div className="mx-auto mb-16 w-full max-w-2xl md:hidden">{/* MOBILE TWEAK: better max width */}
         <MobileAccordion projects={PROJECTS} />
-      </div>
-
-      {/* CTA (small spacing tweaks for mobile rhythm) */}
-      <div className="mt-4 md:mt-6">
-        <RoundedButton backgroundColor="#6366F1">
-          <p>More Work</p>
-        </RoundedButton>
       </div>
 
       {/* Hover Modal (disabled on touch as before) */}

@@ -164,7 +164,11 @@ export default function Footer() {
         custom={10}
         initial="initial"
         animate={isInView ? "open" : "closed"}
-        className="relative z-10 mt-8 flex flex-col items-center justify-between gap-6 sm:flex-row sm:gap-4"
+        className="
+          relative z-10 mt-8
+          mx-auto w-full max-w-7xl
+          flex flex-col items-center justify-between gap-6 sm:flex-row
+        "
       >
         <p className="text-center text-xs text-white/60 sm:text-left sm:text-sm">
           © {new Date().getFullYear()} Dito Rifki Irawan. All rights reserved.
@@ -181,7 +185,9 @@ export default function Footer() {
             >
               <button
                 type="button"
-                onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
+                onClick={() =>
+                  window.open(url, "_blank", "noopener,noreferrer")
+                }
                 aria-label={url}
                 className="
                   flex h-10 w-10 items-center justify-center rounded-xl

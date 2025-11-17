@@ -4,19 +4,19 @@ import React, { useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 
 const PHRASE =
-  "Crafting ideas into code and experiences. Still learning, still growing, always building toward something better.";
+  "Designing interfaces, writing code, and learning every day to build clearer, more useful digital experiences.";
 
 const slideUp: Variants = {
   initial: { y: "100%", opacity: 0 },
-    open: (i: number) => ({
+  open: (i: number) => ({
     y: "0%",
     opacity: 1,
     transition: {
-        duration: 0.3,
-        delay: 0.08 * i,
-        ease: "easeOut",
+      duration: 0.3,
+      delay: 0.08 * i,
+      ease: "easeOut",
     },
-    }),
+  }),
   closed: {
     y: "100%",
     opacity: 0,
@@ -24,15 +24,26 @@ const slideUp: Variants = {
   },
 };
 
-const ACCENT = new Set(["crafting", "code", "learning", "growing", "building", "better"]);
+const ACCENT = new Set([
+  "designing",
+  "interfaces",
+  "code",
+  "learning",
+  "clearer",
+  "useful",
+  "experiences",
+]);
 
 export default function DescriptionSection() {
   const ref = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(ref, { margin: "-20% 0px", once: false });
 
   return (
-    <section className="mt-52 flex justify-center px-5 md:px-12 lg:px-24">
-      <div className="relative mx-auto flex w-full max-w-[1400px] flex-col gap-10 lg:flex-row lg:gap-16">
+    <section 
+      className="mt-32 px-4 sm:px-6 md:px-10 lg:px-24"
+      id="about"
+      >
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 md:gap-10 lg:flex-row lg:items-start lg:gap-16 px-5 md:px-8">
         {/* Animated Headline */}
         <motion.p
           ref={ref}
@@ -72,13 +83,16 @@ export default function DescriptionSection() {
           })}
         </motion.p>
 
-        {/* Static Subtext (no motion) */}
+        {/* Static Subtext */}
         <p className="m-0 text-[15px] font-light text-white/80 md:text-[18px] lg:w-4/5">
           <span className="mr-3 inline-block h-[18px] w-[3px] translate-y-[2px] rounded-full bg-purple-400" />
-          Driven by curiosity for <span className="text-white">technology</span>,{" "}
-          <span className="text-white">creativity</span>, and{" "}
-          <span className="text-white">problem-solving</span>, I keep learning every day
-          to build experiences that inspire and connect.
+          Currently studying <span className="text-white">Informatics Engineering</span> at{" "}
+          <span className="text-white">Institut Teknologi Sumatera</span>, I enjoy working
+          where <span className="text-white">design</span>,{" "}
+          <span className="text-white">engineering</span>, and{" "}
+          <span className="text-white">problem-solving</span> overlap. I like turning vague
+          ideas into clear, practical interfaces and systems — and treating every project as
+          a chance to learn, refine, and build things that actually help people.
         </p>
       </div>
     </section>
