@@ -4,27 +4,27 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { motion, Variants, AnimatePresence } from "framer-motion";
-import RoundedButton from "@/components/ui/rounded-button";
 import { ChevronRight } from "lucide-react";
 
 type Project = {
   title: string;
   src: string;
-  color: string;
+  color?: string;
   role?: string;
 };
 
 const PROJECTS: Project[] = [
-  { title: "Portfolio", src: "/projects/p1.webp", color: "#0b0b0b", role: "Design & Development" },
-  { title: "GKA Energy", src: "/projects/p5.webp", color: "#1b1e27", role: "Design & Development" },
-  { title: "SuaraAziz", src: "/projects/p10.webp", color: "#1b1e27", role: "Design & Development" },
-  { title: "Praktikum ASD", src: "/projects/p6.webp", color: "#1b1e27", role: "Design & Development" },
-  { title: "Duotone Filter", src: "/projects/p8.webp", color: "#1b1e27", role: "Design & Development" },
-  { title: "EduSolver", src: "/projects/p7.webp", color: "#1b1e27", role: "Design & Development" },
-  { title: "Nel's Kitchen", src: "/projects/p4.webp", color: "#1b1e27", role: "Design & Development" },
-  { title: "HarusGerak", src: "/projects/p3.webp", color: "#14161d", role: "Design & Development" },
-  { title: "PPLK ITERA 2024", src: "/projects/p2.webp", color: "#111318", role: "Development" },
-  { title: "Ghost Jump", src: "/projects/p4.webp", color: "#1b1e27", role: "Design & Development" },
+  { title: "Portfolio", src: "/projects/p1.webp", role: "Design & Development" },
+  { title: "GKA Energy", src: "/projects/p5.webp", role: "Design & Development" },
+  { title: "SuaraAziz", src: "/projects/p10.webp", role: "Design & Development" },
+  { title: "Praktikum ASD", src: "/projects/p6.webp", role: "Design & Development" },
+  { title: "Duotone Filter", src: "/projects/p8.webp", role: "Design & Development" },
+  { title: "EduSolver", src: "/projects/p7.webp", role: "Design & Development" },
+  { title: "Nel's Kitchen", src: "/projects/p9.webp", role: "Design & Development" },
+  { title: "Wisata Suka Marga", src: "/projects/p11.webp", role: "Development" },
+  { title: "HarusGerak", src: "/projects/p3.webp", role: "Design & Development" },
+  { title: "PPLK ITERA 2024", src: "/projects/p2.webp", role: "Development" },
+  { title: "Ghost Jump", src: "/projects/p4.webp", role: "Design & Development" },
 ];
 
 const scaleVariant: Variants = {

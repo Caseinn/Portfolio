@@ -14,7 +14,7 @@ export default function Home() {
     <main className="relative bg-black-100 flex justify-center items-center flex-col mx-auto overflow-clip">
       <div className="max-w-8xl w-full">
         {/* <Preloader /> */}
-        <Navbar navItems={navItems}/>
+        <Navbar/>
         <Hero />
         <LogoMarquee/>
         <Description />
