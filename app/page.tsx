@@ -15,7 +15,7 @@ export default function Home() {
         <Hero />
         <LogoMarquee/>
         <Description />
-        {/* TO DO */} <Projects />
+        <Projects />
         <Footer />
       </div>
     </main>

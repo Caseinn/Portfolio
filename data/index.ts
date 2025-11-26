@@ -3,7 +3,7 @@ import { PiSuitcase } from "react-icons/pi";
 import { MdOutlineMailOutline } from "react-icons/md";
 
 export const navItems = [
-  { name: "About", link: "#about", icon: FaRegAddressCard },
+  // { name: "About", link: "#about", icon: FaRegAddressCard },
   { name: "Projects", link: "#projects", icon: PiSuitcase },
   { name: "Contact", link: "#contact", icon: MdOutlineMailOutline },
   ];  
@@ -27,7 +27,7 @@ export const socialMedia = [
 ];
 
 export const projects = [
-  { title: "Portfolio", src: "/projects/p1.webp", role: "Design & Development" },
+  // { title: "Portfolio", src: "/projects/p1.webp", role: "Design & Development" },
   { title: "GKA Energy", src: "/projects/p5.webp", role: "Design & Development", url: "https://www.gkaenergy.co.id/" },
   { title: "SuaraAziz", src: "/projects/p10.webp", role: "Design & Development", url: "https://suaraziz.vercel.app/" },
   { title: "Praktikum ASD", src: "/projects/p6.webp", role: "Design & Development", url: "https://praktikum-asd-rd.vercel.app/" },
