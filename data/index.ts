@@ -31,7 +31,7 @@ export const projects = [
   { title: "GKA Energy", src: "/projects/p5.webp", role: "Design & Development", url: "https://www.gkaenergy.co.id/" },
   { title: "SuaraAziz", src: "/projects/p10.webp", role: "Design & Development", url: "https://suaraziz.vercel.app/" },
   { title: "Praktikum ASD", src: "/projects/p6.webp", role: "Design & Development", url: "https://praktikum-asd-rd.vercel.app/" },
-  { title: "Duotone Filter", src: "/projects/p8.webp", role: "Design & Development", url: "https://duotone-app-psi.vercel.app/" },
+  { title: "Duotone Filter", src: "/projects/p8.webp", role: "Design & Development", url: "https://duotone-caseinn.vercel.app/" },
   { title: "EduSolver", src: "/projects/p7.webp", role: "Design & Development", url: "https://www.edusolver.site/" },
   { title: "Nel's Kitchen", src: "/projects/p9.webp", role: "Design & Development" },
   { title: "Wisata Suka Marga", src: "/projects/p11.webp", role: "Development", url: "https://www.wisatasukamarga.my.id/" },
