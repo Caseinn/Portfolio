@@ -126,9 +126,11 @@ export default function Footer() {
           animate={isInView ? "open" : "closed"}
           className="mt-7 flex justify-center sm:mt-8"
         >
+        <a href="mailto:ditorifki.irawan@gmail.com" className="inline-block no-underline">
           <RoundedButton backgroundColor="#6366F1" aria-label="Contact Me">
             <p className="text-sm sm:text-base">Contact Me</p>
           </RoundedButton>
+        </a>
         </motion.div>
 
         {/* Mobile icons inside card */}
