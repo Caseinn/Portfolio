@@ -22,7 +22,7 @@ export const socialMedia = [
   {
     id: 3,
     icon: FaLinkedin,
-    url: "https://www.linkedin.com/in/ditorifkiirawan/",
+    url: "https://www.linkedin.com/in/ditorifki/",
   },
 ];
 
