@@ -1,4 +1,4 @@
-import { FaGithub, FaInstagram, FaLinkedin, FaRegAddressCard } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { PiSuitcase } from "react-icons/pi";
 import { MdOutlineMailOutline } from "react-icons/md";
 
@@ -28,6 +28,8 @@ export const socialMedia = [
 
 export const projects = [
   // { title: "Portfolio", src: "/projects/p1.webp", role: "Design & Development" },
+  { title: "Dito Digital Printing", src: "/projects/p13.webp", role: "Design & Development", url: "https://www.ditodigitalprinting.my.id/" },
+  { title: "Harian Muslim", src: "/projects/p12.webp", role: "Design & Development", url: "https://harian-muslim.vercel.app/" },
   { title: "GKA Energy", src: "/projects/p5.webp", role: "Design & Development", url: "https://www.gkaenergy.co.id/" },
   { title: "SuaraAziz", src: "/projects/p10.webp", role: "Design & Development", url: "https://suaraziz.vercel.app/" },
   { title: "Praktikum ASD", src: "/projects/p6.webp", role: "Design & Development", url: "https://praktikum-asd-rd.vercel.app/" },
@@ -35,7 +37,7 @@ export const projects = [
   { title: "EduSolver", src: "/projects/p7.webp", role: "Design & Development", url: "https://www.edusolver.site/" },
   { title: "Nel's Kitchen", src: "/projects/p9.webp", role: "Design & Development" },
   { title: "Wisata Suka Marga", src: "/projects/p11.webp", role: "Development", url: "https://www.wisatasukamarga.my.id/" },
-  { title: "HarusGerak", src: "/projects/p3.webp", role: "Design & Development" },
+  { title: "HarusGerak", src: "/projects/p3.webp", role: "Development" },
   { title: "PPLK ITERA 2024", src: "/projects/p2.webp", role: "Development" },
   { title: "Ghost Jump", src: "/projects/p4.webp", role: "Design & Development" },
 ];
