@@ -3,9 +3,8 @@
   import React, { useEffect, useRef, useState } from "react";
   import Image from "next/image";
   import gsap from "gsap";
-  import { motion, Variants, AnimatePresence } from "framer-motion";
-  import { ChevronRight } from "lucide-react";
-  import { projects } from "@/data";
+import { motion, Variants } from "framer-motion";
+import { projects } from "@/data";
 
   type Project = {
     title: string;
@@ -104,74 +103,106 @@
     return <div {...commonProps}>{content}</div>;
   }
 
-  function MobileAccordion({ projects }: { projects: Project[] }) {
-    const [openIndex, setOpenIndex] = useState<number | null>(null);
+  function ProjectCard({ project }: { project: Project }) {
+    const isDisabled = !project.url;
+    const roleLabel = project.role ?? "Design & Development";
+
+    const cardContent = (
+      <>
+        <div className="relative aspect-[16/10] overflow-hidden">
+          <Image
+            src={project.src}
+            alt={project.title}
+            fill
+            className={`object-cover transition-transform duration-300 ${!isDisabled ? "group-hover:scale-105" : ""}`}
+          />
+          {!project.url && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+              <span className="text-xs uppercase tracking-widest text-white/60">No link</span>
+            </div>
+          )}
+        </div>
+        <div className="bg-white/[0.03] p-4 space-y-1">
+          <h3 className={`font-semibold text-white ${isDisabled ? "text-white/60" : ""}`}>
+            {project.title}
+          </h3>
+          <p className="text-xs uppercase tracking-[0.25em] text-white/50">
+            {roleLabel}
+          </p>
+        </div>
+      </>
+    );
+
+    if (isDisabled) {
+      return (
+        <div className="w-[85%] flex-shrink-0 snap-start cursor-not-allowed opacity-60">
+          <div className="overflow-hidden rounded-2xl border border-white/10">
+            {cardContent}
+          </div>
+        </div>
+      );
+    }
 
     return (
-      <div className="w-full space-y-4">
-        {projects.map((p, i) => {
-          const isOpen = openIndex === i;
-          const focusLabel = p.role ?? "Design & Development";
+      <a
+        href={project.url}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="group w-[85%] flex-shrink-0 snap-start cursor-pointer"
+      >
+        <div className="overflow-hidden rounded-2xl border border-white/10 transition-all duration-300 hover:border-white/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] active:scale-[0.98]">
+          {cardContent}
+        </div>
+      </a>
+    );
+  }
 
-          return (
-            <div
-              key={p.title}
-              className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]"
-            >
-              <button
-                onClick={() => setOpenIndex(isOpen ? null : i)}
-                className="flex w-full items-center justify-between gap-4 px-5 py-5
-                text-left text-white"
-              >
-                <div>
-                  <p className="text-lg font-semibold">{p.title}</p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.25em] text-white/50">
-                    {focusLabel}
-                  </p>
-                </div>
+  function DotsIndicator({ total, activeIndex }: { total: number; activeIndex: number }) {
+    return (
+      <div className="flex items-center justify-center gap-2 mt-6" role="tablist">
+        {Array.from({ length: total }).map((_, i) => (
+          <button
+            key={i}
+            role="tab"
+            aria-selected={i === activeIndex}
+            aria-label={`Go to project ${i + 1}`}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i === activeIndex
+                ? "w-6 bg-purple-400"
+                : "w-2 bg-white/20 hover:bg-white/40"
+            }`}
+          />
+        ))}
+      </div>
+    );
+  }
 
-                <ChevronRight
-                  className={`h-5 w-5 transition-transform duration-300 ${
-                    isOpen ? "rotate-90 text-purple-400" : "text-white/60"
-                  }`}
-                />
-              </button>
+  function ProjectCarousel({ projects }: { projects: Project[] }) {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [showHint, setShowHint] = useState(true);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="px-5 pb-5 space-y-3">
-                      <div className="relative aspect-[16/10] overflow-hidden rounded-2xl ring-1 ring-white/10">
-                        <Image
-                          src={p.src}
-                          alt={p.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <p className="text-sm text-white/70">{focusLabel}</p>
-                      {p.url && (
-                        <a
-                          href={p.url}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="inline-flex text-sm font-semibold text-purple-300 hover:text-purple-200"
-                        >
-                          Visit site
-                        </a>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
+    const handleScroll = () => {
+      if (showHint) setShowHint(false);
+      if (!containerRef.current) return;
+      const { scrollLeft, offsetWidth } = containerRef.current;
+      const cardWidth = offsetWidth / 0.85;
+      const index = Math.round(scrollLeft / cardWidth);
+      setActiveIndex(Math.min(index, projects.length - 1));
+    };
+
+    return (
+      <div className="relative w-full">
+        <div
+          ref={containerRef}
+          onScroll={handleScroll}
+          className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-[7.5%]"
+        >
+          {projects.map((project) => (
+            <ProjectCard key={project.title} project={project} />
+          ))}
+        </div>
+        <DotsIndicator total={projects.length} activeIndex={activeIndex} />
       </div>
     );
   }
@@ -237,9 +268,9 @@
           ))}
         </div>
 
-        {/* Mobile Accordion */}
-        <div className="mx-auto mt-10 w-full max-w-2xl md:hidden">
-          <MobileAccordion projects={projects} />
+        {/* Mobile Carousel */}
+        <div className="mx-auto mt-10 w-full md:hidden">
+          <ProjectCarousel projects={projects} />
         </div>
 
         {/* Hover Modal */}
