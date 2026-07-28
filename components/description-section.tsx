@@ -86,13 +86,13 @@ export default function DescriptionSection() {
         {/* Static Subtext */}
         <p className="m-0 text-[15px] font-light text-white/80 md:text-[18px] lg:w-4/5">
           <span className="mr-3 inline-block h-[18px] w-[3px] translate-y-[2px] rounded-full bg-purple-400" />
-          Currently studying <span className="text-white">Informatics Engineering</span> at{" "}
-          <span className="text-white">Institut Teknologi Sumatera</span>, I enjoy working
-          where <span className="text-white">design</span>,{" "}
-          <span className="text-white">engineering</span>, and{" "}
-          <span className="text-white">problem-solving</span> overlap. I like turning vague
-          ideas into clear, practical interfaces and systems — and treating every project as
-          a chance to learn, refine, and build things that actually help people.
+          <span className="text-white">Informatics Engineering</span> Graduate from{" "}
+          <span className="text-white">Institut Teknologi Sumatera (ITERA)</span>. Interested
+          in <span className="text-white">Machine Learning</span>,{" "}
+          <span className="text-white">Deep Learning</span>, and{" "}
+          <span className="text-white">Web Development</span>. Passionate about building practical
+          technology solutions, continuously learning new skills, and collaborating effectively
+          in team environments.
         </p>
       </div>
     </section>
