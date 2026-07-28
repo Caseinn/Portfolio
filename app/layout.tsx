@@ -6,7 +6,7 @@ import SplashCursor from "@/components/ui/splash-cursor";
 import LenisController from "@/components/ui/lenis-controller";
 import "./globals.css";
 
-const siteUrl = "https://caseinn.vercel.app";
+const siteUrl = "https://caseinn.web.id";
 const jsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     google: "1KI_k0smkrnjh8xv7tnvvsSeD9YGTbZPnxJBtKveNSE",
   },
   icons: {
-    icon: "/icon.ico",
+    icon: "/favicon.ico",
   },
   robots: {
     index: true,
