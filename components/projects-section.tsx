@@ -82,7 +82,7 @@ import { projects } from "@/data";
 
         {/* Right: Role */}
         <p className="mt-1 text-sm uppercase tracking-[0.25em] text-white/50 text-right">
-          {role ?? "Design & Development"}
+          {role ?? "Development"}
         </p>
       </>
     );
@@ -105,7 +105,7 @@ import { projects } from "@/data";
 
   function ProjectCard({ project }: { project: Project }) {
     const isDisabled = !project.url;
-    const roleLabel = project.role ?? "Design & Development";
+    const roleLabel = project.role ?? "Development";
 
     const cardContent = (
       <>
