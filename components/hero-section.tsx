@@ -30,13 +30,12 @@ const Hero = () => {
           <div className="space-y-6 text-center lg:text-left">
             <TextGenerateEffect
               className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl"
-              words="Building things on the internet"
+              words="I build web apps, front to back"
             />
 
             <p className="mx-auto max-w-xl text-base text-white/80 sm:text-lg md:text-xl lg:mx-0 lg:max-w-2xl">
-              I’m Dito Rifki Irawan — Caseinn — a developer who enjoys learning, building, and
-              solving problems through technology. I love exploring new ideas, improving systems,
-              and creating things that are useful and meaningful.
+              I’m Dito Rifki Irawan, goes by Caseinn. I build websites and web apps for people
+              who need them to work, not just look good.
             </p>
 
             {/* ✅ Buttons container – now centered on mobile, bigger button */}
