@@ -7,13 +7,15 @@ import LenisController from "@/components/ui/lenis-controller";
 import "./globals.css";
 
 const siteUrl = "https://caseinn.web.id";
+const siteDescription =
+  "Portfolio of Dito Rifki Irawan (Caseinn), a web developer in Lampung, Indonesia who builds websites and web apps with React, Next.js, Astro, Laravel, and Python.";
 const jsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Dito Rifki Irawan",
   alternateName: "Caseinn",
   url: siteUrl,
-  description: "Portfolio showcasing the work of Dito Rifki Irawan, also known as Caseinn.",
+  description: siteDescription,
 });
 
 const geistSans = localFont({
@@ -33,8 +35,7 @@ export const metadata: Metadata = {
     default: "Caseinn | Portfolio of Dito Rifki Irawan",
     template: "%s | Caseinn",
   },
-  description:
-    "Personal portfolio of Dito Rifki Irawan (Caseinn) highlighting creative and technical work.",
+  description: siteDescription,
   keywords: [
     "Caseinn",
     "Dito Rifki Irawan",
@@ -51,14 +52,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     title: "Caseinn | Portfolio of Dito Rifki Irawan",
-    description:
-      "Discover the work, projects, and experience of Dito Rifki Irawan, also known as Caseinn.",
+    description: siteDescription,
     siteName: "Caseinn",
     images: [
       {
         url: "/me.webp",
         width: 1200,
-        height: 630,
+        height: 1418,
         alt: "Portrait of Dito Rifki Irawan (Caseinn)",
       },
     ],
@@ -66,8 +66,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Caseinn | Portfolio of Dito Rifki Irawan",
-    description:
-      "Explore the projects and skills of Dito Rifki Irawan, also known as Caseinn.",
+    description: siteDescription,
     images: ["/me.webp"],
   },
   alternates: {
