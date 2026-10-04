@@ -3,10 +3,9 @@ import { PiSuitcase } from "react-icons/pi";
 import { MdOutlineMailOutline } from "react-icons/md";
 
 export const navItems = [
-  // { name: "About", link: "#about", icon: FaRegAddressCard },
   { name: "Projects", link: "#projects", icon: PiSuitcase },
   { name: "Contact", link: "#contact", icon: MdOutlineMailOutline },
-  ];  
+];
   
 export const socialMedia = [
   {
@@ -27,7 +26,6 @@ export const socialMedia = [
 ];
 
 export const projects = [
-  // { title: "Portfolio", src: "/projects/p1.webp", role: "Design & Development" },
   { title: "Dito Digital Printing", src: "/projects/p13.webp", role: "Development", url: "https://www.ditodigitalprinting.my.id/" },
   { title: "Harian Muslim", src: "/projects/p12.webp", role: "Development", url: "https://muslim.caseinn.web.id/" },
   { title: "GKA Energy", src: "/projects/p5.webp", role: "Development", url: "https://www.gkaenergy.co.id/" },
