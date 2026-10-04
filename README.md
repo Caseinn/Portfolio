@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# caseinn.web.id
 
-## Getting Started
+Personal portfolio for Dito Rifki Irawan (Caseinn), web developer in Lampung, Indonesia. Live at [caseinn.web.id](https://caseinn.web.id).
 
-First, run the development server:
+## Stack
+
+Next.js 16 (App Router, Turbopack), React 19, Tailwind CSS 4, TypeScript, Framer Motion, GSAP, Lenis for smooth scroll.
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run lint    # eslint
+npm run build   # production build
+npm run start   # serve the production build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Git hooks install themselves via the `prepare` script (`.githooks/`).
 
-## Learn More
+## Editing content
 
-To learn more about Next.js, take a look at the following resources:
+| What | Where |
+| --- | --- |
+| Hero headline and intro | `components/hero-section.tsx:33` |
+| About headline and bio | `components/description-section.tsx:7` (`PHRASE`) and the subtext at line 51 |
+| Contact headline and email | `components/ui/footer.tsx:17` (`HEADLINE`) and the `mailto:` at line 122 |
+| Project list | `data/index.ts:28` |
+| Tech stack marquee | `components/marquee-section.tsx:9` |
+| SEO descriptions | `app/layout.tsx:10` (`siteDescription`) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The animated headlines highlight specific words, so accent lists need to match:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `ACCENT` in `description-section.tsx` holds normalized words (`interface,` matches `interface`).
+- `ACCENTED_HEADLINE_WORDS` in `footer.tsx` holds word indexes, not words.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Vercel: import the repo, leave the defaults, deploy. `app/layout.tsx` sets `metadataBase`, `sitemap.ts` and `robots.ts` generate themselves from it.
