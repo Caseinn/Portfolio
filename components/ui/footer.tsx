@@ -14,7 +14,7 @@ import { slideUpVariants, SplitWords } from "@/components/ui/split-text";
 import { cn } from "@/lib/utils";
 import type { IconType } from "react-icons";
 
-const HEADLINE = "Let's create your next big idea.";
+const HEADLINE = "Have a website or app in mind?";
 const ACCENTED_HEADLINE_WORDS = new Set([2, 4]);
 
 const SOCIAL_BUTTON_BASE =
