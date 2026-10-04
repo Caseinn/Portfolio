@@ -4,18 +4,9 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { SplitWords } from "@/components/ui/split-text";
 
-const PHRASE =
-  "Designing interfaces, writing code, and learning every day to build clearer, more useful digital experiences.";
+const PHRASE = "Design the interface, then build it.";
 
-const ACCENT = new Set([
-  "designing",
-  "interfaces",
-  "code",
-  "learning",
-  "clearer",
-  "useful",
-  "experiences",
-]);
+const ACCENT = new Set(["design", "interface", "build"]);
 
 const normalize = (word: string) => word.toLowerCase().replace(/[^\w]/g, "");
 
@@ -48,13 +39,11 @@ export default function DescriptionSection() {
         {/* Static Subtext */}
         <p className="m-0 text-[15px] font-light text-white/80 md:text-[18px] lg:w-4/5">
           <span className="mr-3 inline-block h-[18px] w-[3px] translate-y-[2px] rounded-full bg-purple-400" />
-          <span className="text-white">Informatics Engineering</span> Graduate from{" "}
-          <span className="text-white">Institut Teknologi Sumatera (ITERA)</span>. Interested
-          in <span className="text-white">Machine Learning</span>,{" "}
-          <span className="text-white">Deep Learning</span>, and{" "}
-          <span className="text-white">Web Development</span>. Passionate about building practical
-          technology solutions, continuously learning new skills, and collaborating effectively
-          in team environments.
+          <span className="text-white">Informatics Engineering</span> graduate from{" "}
+          <span className="text-white">Institut Teknologi Sumatera (ITERA)</span>. I build{" "}
+          <span className="text-white">websites</span> end to end, interface and server both, and
+          keep them running after launch. <span className="text-white">Machine learning</span> is
+          the other thing I do, when a problem calls for it.
         </p>
       </div>
     </section>
