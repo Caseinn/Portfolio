@@ -5,11 +5,11 @@
   import gsap from "gsap";
 import { motion, Variants } from "framer-motion";
 import { projects } from "@/data";
+import { useIsDesktop } from "@/lib/use-media-query";
 
   type Project = {
     title: string;
     src: string;
-    color?: string;
     role?: string;
     url?: string;
   };
@@ -179,11 +179,9 @@ import { projects } from "@/data";
 
   function ProjectCarousel({ projects }: { projects: Project[] }) {
     const [activeIndex, setActiveIndex] = useState(0);
-    const [showHint, setShowHint] = useState(true);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handleScroll = () => {
-      if (showHint) setShowHint(false);
       if (!containerRef.current) return;
       const { scrollLeft, offsetWidth } = containerRef.current;
       const cardWidth = offsetWidth / 0.85;
@@ -209,6 +207,7 @@ import { projects } from "@/data";
 
   export default function ProjectsSection() {
     const isTouch = useIsTouch();
+    const isDesktop = useIsDesktop();
     const [modal, setModal] = useState({ active: false, index: 0 });
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -255,6 +254,7 @@ import { projects } from "@/data";
         </h2>
 
         {/* Desktop List */}
+        {isDesktop && (
         <div className="mx-auto w-full max-w-6xl space-y-6 hidden md:block">
           {projects.map((p, i) => (
             <ProjectRow
@@ -267,11 +267,14 @@ import { projects } from "@/data";
             />
           ))}
         </div>
+        )}
 
         {/* Mobile Carousel */}
+        {!isDesktop && (
         <div className="mx-auto mt-10 w-full md:hidden">
           <ProjectCarousel projects={projects} />
         </div>
+        )}
 
         {/* Hover Modal */}
         {!isTouch && (

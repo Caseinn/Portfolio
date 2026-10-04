@@ -1,28 +1,11 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useInView, type Variants } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { SplitWords } from "@/components/ui/split-text";
 
 const PHRASE =
   "Designing interfaces, writing code, and learning every day to build clearer, more useful digital experiences.";
-
-const slideUp: Variants = {
-  initial: { y: "100%", opacity: 0 },
-  open: (i: number) => ({
-    y: "0%",
-    opacity: 1,
-    transition: {
-      duration: 0.3,
-      delay: 0.08 * i,
-      ease: "easeOut",
-    },
-  }),
-  closed: {
-    y: "100%",
-    opacity: 0,
-    transition: { duration: 0.5, ease: "easeInOut" },
-  },
-};
 
 const ACCENT = new Set([
   "designing",
@@ -34,15 +17,17 @@ const ACCENT = new Set([
   "experiences",
 ]);
 
+const normalize = (word: string) => word.toLowerCase().replace(/[^\w]/g, "");
+
 export default function DescriptionSection() {
   const ref = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(ref, { margin: "-20% 0px", once: false });
 
   return (
-    <section 
+    <section
       className="mt-32 px-4 sm:px-6 md:px-10 lg:px-24"
       id="about"
-      >
+    >
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 md:gap-10 lg:flex-row lg:items-start lg:gap-16 px-5 md:px-8">
         {/* Animated Headline */}
         <motion.p
@@ -52,36 +37,13 @@ export default function DescriptionSection() {
           transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
           className="m-0 bg-gradient-to-b font-semibold text-white bg-clip-text text-[28px] leading-snug md:text-[36px] md:leading-[1.3]"
         >
-          {PHRASE.split(" ").map((word, i) => {
-            const clean = word.toLowerCase().replace(/[^\w]/g, "");
-            const isAccent = ACCENT.has(clean);
-
-            return (
-              <span
-                key={`${word}-${i}`}
-                className="relative mr-[3px] inline-flex overflow-hidden align-top"
-              >
-                <motion.span
-                  variants={slideUp}
-                  custom={i}
-                  initial="initial"
-                  animate={isInView ? "open" : "closed"}
-                  className={`inline-block ${
-                    isAccent
-                      ? "bg-gradient-to-r from-purple-300 to-purple-400 bg-clip-text text-transparent"
-                      : ""
-                  }`}
-                >
-                  {word}
-                </motion.span>
-
-                {isAccent && (
-                  <span className="pointer-events-none absolute bottom-[-3px] left-0 h-[1.5px] w-full bg-gradient-to-r from-purple-400/60 via-purple-500/50 to-transparent" />
-                )}
-              </span>
-            );
-          })}
+          <SplitWords
+            text={PHRASE}
+            isInView={isInView}
+            isAccent={(word) => ACCENT.has(normalize(word))}
+          />
         </motion.p>
+
 
         {/* Static Subtext */}
         <p className="m-0 text-[15px] font-light text-white/80 md:text-[18px] lg:w-4/5">

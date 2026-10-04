@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -11,39 +11,31 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { navItems } from "@/data";
+import {
+  useMediaQuery,
+  usePrefersReducedMotion,
+} from "@/lib/use-media-query";
 import type { IconType } from "react-icons";
 
 export const Navbar = ({ className }: { className?: string }) => {
   const { scrollYProgress } = useScroll();
   const [compact, setCompact] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   useMotionValueEvent(scrollYProgress, "change", () => {
     setCompact(scrollYProgress.get() > 0.03);
   });
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const targetWidth = isMobile
-    ? undefined
-    : compact
-    ? "min(48rem, 72vw)"
-    : "min(70rem, 90vw)";
-
-  const navPadding = isMobile
-    ? { paddingTop: 10, paddingBottom: 10, paddingLeft: 18, paddingRight: 18 }
-    : { paddingTop: 12, paddingBottom: 12, paddingLeft: 24, paddingRight: 24 };
-
-  const reducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  // On small screens the bar is full-bleed via `w-full`, so only the desktop
+  // width is animated.
+  const targetWidth = isDesktop
+    ? compact
+      ? "min(48rem, 72vw)"
+      : "min(70rem, 90vw)"
+    : undefined;
 
   return (
     <div
@@ -54,11 +46,7 @@ export const Navbar = ({ className }: { className?: string }) => {
     >
       <motion.nav
         aria-label="Main navigation"
-        animate={{
-          width: targetWidth,
-          borderRadius: 999,
-          ...navPadding,
-        }}
+        animate={{ width: targetWidth }}
         transition={{
           type: "spring",
           stiffness: 260,
@@ -72,11 +60,11 @@ export const Navbar = ({ className }: { className?: string }) => {
           "rounded-full border border-white/10 bg-black/50",
           "backdrop-blur-2xl shadow-[0_22px_60px_rgba(0,0,0,0.75)]",
           "flex items-center justify-between gap-3 md:gap-6",
+          "py-2.5 px-[18px] md:py-3 md:px-6",
           "transition-colors duration-300",
           "whitespace-nowrap",
           className,
         )}
-        style={isMobile ? { width: "calc(100vw - 24px)" } : undefined}
       >
         {/* Brand – clickable */}
         <Link href="/" className="flex items-center gap-2 pl-1 pr-2 md:px-2">
@@ -123,7 +111,7 @@ export const Navbar = ({ className }: { className?: string }) => {
         </div>
 
         {/* Mobile Menu Trigger */}
-        {isMobile && (
+        <div className="md:hidden">
           <Popover open={menuOpen} onOpenChange={setMenuOpen}>
             <PopoverTrigger asChild>
               <button
@@ -181,7 +169,7 @@ export const Navbar = ({ className }: { className?: string }) => {
               </div>
             </PopoverContent>
           </Popover>
-        )}
+        </div>
       </motion.nav>
     </div>
   );

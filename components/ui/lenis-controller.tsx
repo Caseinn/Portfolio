@@ -1,15 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Lenis from "lenis";
+import { matches, REDUCED_MOTION_QUERY } from "@/lib/use-media-query";
 
 export default function LenisController() {
-  const lenisRef = useRef<Lenis | null>(null);
-
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefersReducedMotion = matches(REDUCED_MOTION_QUERY);
 
     const easing: (t: number) => number = (t) =>
       Math.min(1, 1.001 - Math.pow(2, -10 * t));
@@ -19,19 +16,11 @@ export default function LenisController() {
       smoothWheel: !prefersReducedMotion,
       duration: prefersReducedMotion ? 0 : 1.2,
       easing,
-      anchors: true, 
+      anchors: true,
     });
 
-    lenisRef.current = lenis;
-
-    const onScroll = () => {
-    };
-    lenis.on("scroll", onScroll);
-
     return () => {
-      lenis.off("scroll", onScroll);
       lenis.destroy();
-      lenisRef.current = null;
     };
   }, []);
 

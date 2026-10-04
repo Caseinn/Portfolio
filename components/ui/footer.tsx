@@ -1,48 +1,58 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { socialMedia } from "@/data";
 import Magnet from "@/components/ui/magnet";
 import RoundedButton from "@/components/ui/rounded-button";
-import { motion, useInView, type Variants } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import {
+  useCoarsePointer,
+  usePrefersReducedMotion,
+} from "@/lib/use-media-query";
+import { slideUpVariants, SplitWords } from "@/components/ui/split-text";
+import { cn } from "@/lib/utils";
+import type { IconType } from "react-icons";
 
-const slideUp: Variants = {
-  initial: { y: "100%", opacity: 0 },
-  open: (i: number) => ({
-    y: "0%",
-    opacity: 1,
-    transition: {
-      duration: 0.3,
-      delay: 0.08 * i,
-      ease: "easeOut",
-    },
-  }),
-  closed: {
-    y: "100%",
-    opacity: 0,
-    transition: { duration: 0.5, ease: "easeInOut" },
-  },
-};
+const HEADLINE = "Let's create your next big idea.";
+const ACCENTED_HEADLINE_WORDS = new Set([2, 4]);
+
+const SOCIAL_BUTTON_BASE =
+  "flex items-center justify-center rounded-xl border border-white/10 bg-white/5 backdrop-blur-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 cursor-pointer";
+
+function SocialIconButton({
+  url,
+  icon: Icon,
+  size,
+}: {
+  url: string;
+  icon: IconType;
+  size: "sm" | "md";
+}) {
+  const iconSize = size === "md" ? "text-[18px]" : "text-[16px]";
+
+  return (
+    <button
+      type="button"
+      onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
+      aria-label={url}
+      className={cn(
+        SOCIAL_BUTTON_BASE,
+        size === "md" ? "h-11 w-11" : "h-10 w-10",
+        size === "md" ? "active:scale-95" : "hover:scale-110"
+      )}
+    >
+      <Icon className={cn(iconSize, "text-white")} />
+    </button>
+  );
+}
 
 export default function Footer() {
-  const [disableMagnet, setDisableMagnet] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const coarsePointer = useCoarsePointer();
+  const disableMagnet = prefersReducedMotion || coarsePointer;
   const ref = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(ref, { margin: "-20% 0px", once: false });
-
-  // Disable magnet on touch/reduced-motion
-  useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const coarse = window.matchMedia("(pointer: coarse)");
-    const update = () => setDisableMagnet(reduced.matches || coarse.matches);
-    update();
-    reduced.addEventListener?.("change", update);
-    coarse.addEventListener?.("change", update);
-    return () => {
-      reduced.removeEventListener?.("change", update);
-      coarse.removeEventListener?.("change", update);
-    };
-  }, []);
 
   return (
     <footer
@@ -76,7 +86,7 @@ export default function Footer() {
       >
         {/* Availability */}
         <motion.div
-          variants={slideUp}
+          variants={slideUpVariants}
           custom={0}
           initial="initial"
           animate={isInView ? "open" : "closed"}
@@ -91,36 +101,19 @@ export default function Footer() {
 
         {/* Headline */}
         <p className="mx-auto mb-2 max-w-xl text-[28px] font-semibold leading-snug text-white md:text-[40px] md:leading-[1.2]">
-          {"Let's create your next big idea."
-            .split(" ")
-            .map((word, i) => (
-              <span
-                key={`${word}-${i}`}
-                className="relative mr-[4px] inline-flex overflow-hidden align-top"
-              >
-                <motion.span
-                  variants={slideUp}
-                  custom={i + 1}
-                  initial="initial"
-                  animate={isInView ? "open" : "closed"}
-                  className={`inline-block ${
-                    i === 2 || i === 4
-                      ? "bg-gradient-to-r from-purple-300 to-purple-500 bg-clip-text text-transparent"
-                      : ""
-                  }`}
-                >
-                  {word}
-                </motion.span>
-                {(i === 2 || i === 4) && (
-                  <span className="pointer-events-none absolute bottom-[-3px] left-0 h-[1.5px] w-full bg-gradient-to-r from-purple-400/60 via-purple-500/50 to-transparent" />
-                )}
-              </span>
-            ))}
+          <SplitWords
+            text={HEADLINE}
+            isInView={isInView}
+            isAccent={(_, i) => ACCENTED_HEADLINE_WORDS.has(i)}
+            indexOffset={1}
+            gapClassName="mr-[4px]"
+            accentClassName="bg-gradient-to-r from-purple-300 to-purple-500 bg-clip-text text-transparent"
+          />
         </p>
 
         {/* CTA Button */}
         <motion.div
-          variants={slideUp}
+          variants={slideUpVariants}
           custom={8}
           initial="initial"
           animate={isInView ? "open" : "closed"}
@@ -135,34 +128,21 @@ export default function Footer() {
 
         {/* Mobile icons inside card */}
         <motion.div
-          variants={slideUp}
+          variants={slideUpVariants}
           custom={9}
           initial="initial"
           animate={isInView ? "open" : "closed"}
           className="mt-8 flex justify-center gap-4 sm:hidden"
         >
-          {socialMedia.map(({ id, icon: Icon, url }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
-              aria-label={url}
-              className="
-                flex h-11 w-11 items-center justify-center rounded-xl
-                border border-white/10 bg-white/5 backdrop-blur-md
-                transition active:scale-95 focus-visible:outline-none
-                focus-visible:ring-2 focus-visible:ring-white/40
-              "
-            >
-              <Icon className="text-[18px] text-white" />
-            </button>
+          {socialMedia.map(({ id, icon, url }) => (
+            <SocialIconButton key={id} url={url} icon={icon} size="md" />
           ))}
         </motion.div>
       </div>
 
       {/* ---------- Bottom Section ---------- */}
       <motion.div
-        variants={slideUp}
+        variants={slideUpVariants}
         custom={10}
         initial="initial"
         animate={isInView ? "open" : "closed"}
@@ -178,28 +158,14 @@ export default function Footer() {
 
         {/* Desktop icons */}
         <div className="hidden items-center gap-3 sm:flex sm:gap-4">
-          {socialMedia.map(({ id, icon: Icon, url }) => (
+          {socialMedia.map(({ id, icon, url }) => (
             <Magnet
               key={id}
               disabled={disableMagnet}
               magnetStrength={4}
               wrapperClassName="inline-block"
             >
-              <button
-                type="button"
-                onClick={() =>
-                  window.open(url, "_blank", "noopener,noreferrer")
-                }
-                aria-label={url}
-                className="
-                  flex h-10 w-10 items-center justify-center rounded-xl
-                  border border-white/10 bg-white/5 backdrop-blur-md
-                  transition hover:scale-110 focus-visible:outline-none
-                  focus-visible:ring-2 focus-visible:ring-white/40 cursor-pointer
-                "
-              >
-                <Icon className="text-[16px] text-white" />
-              </button>
+              <SocialIconButton url={url} icon={icon} size="sm" />
             </Magnet>
           ))}
         </div>
