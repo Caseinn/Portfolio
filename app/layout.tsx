@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "./provider";
-import SplashCursor from "@/components/ui/splash-cursor";
+import { SplashCursorGate } from "@/components/ui/splash-cursor-gate";
 import LenisController from "@/components/ui/lenis-controller";
 import "./globals.css";
 
@@ -33,7 +33,8 @@ export const metadata: Metadata = {
     default: "Caseinn | Portfolio of Dito Rifki Irawan",
     template: "%s | Caseinn",
   },
-  description: "Personal portfolio of Dito Rifki Irawan (Caseinn) highlighting creative and technical work.",
+  description:
+    "Personal portfolio of Dito Rifki Irawan (Caseinn) highlighting creative and technical work.",
   keywords: [
     "Caseinn",
     "Dito Rifki Irawan",
@@ -121,7 +122,7 @@ export default function RootLayout({
         >
           <LenisController />
           {children}
-          <SplashCursor />
+          <SplashCursorGate />
         </ThemeProvider>
       </body>
     </html>
