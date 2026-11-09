@@ -1,59 +1,105 @@
-'use client';
+"use client";
 
 import {
   Marquee,
   MarqueeContent,
   MarqueeItem,
-} from '@/components/ui/marquee';
+} from "@/components/ui/marquee";
+import { usePrefersReducedMotion } from "@/lib/use-media-query";
+import {
+  SiAstro,
+  SiCss3,
+  SiDrizzle,
+  SiFirebase,
+  SiHtml5,
+  SiJavascript,
+  SiLaravel,
+  SiMongodb,
+  SiMysql,
+  SiNextdotjs,
+  SiPhp,
+  SiPostgresql,
+  SiPrisma,
+  SiPytorch,
+  SiPython,
+  SiReact,
+  SiSupabase,
+  SiTailwindcss,
+  SiTypescript,
+} from "react-icons/si";
+import { TbPyramid } from "react-icons/tb";
+import type { IconType } from "react-icons";
 
-const techStack = [
-  // --- Core Web ---
-  { name: 'HTML', icon: 'devicon-html5-plain original' },
-  { name: 'CSS', icon: 'devicon-css3-plain original' },
-  { name: 'JavaScript', icon: 'devicon-javascript-plain original' },
-  { name: 'Tailwind CSS', icon: 'devicon-tailwindcss-plain original' },
-
-  // --- Frontend Frameworks ---
-  { name: 'React', icon: 'devicon-react-original original' },
-  { name: 'Next.js', icon: 'devicon-nextjs-plain' },
-  { name: 'Astro', icon: 'devicon-astro-plain original' },
-
-  // --- Backend & Languages ---
-  { name: 'PHP', icon: 'devicon-php-plain original' },
-  { name: 'Laravel', icon: 'devicon-laravel-plain original' },
-  { name: 'Python', icon: 'devicon-python-plain original' },
-  { name: 'Pyramid', icon: null },
-
-  // --- Database / Services ---
-  { name: 'MySQL', icon: 'devicon-mysql-plain original' },
-  { name: 'MongoDB', icon: 'devicon-mongodb-plain original' },
-  { name: 'Prisma', icon: 'devicon-prisma-original' },
-  { name: 'Supabase', icon: 'devicon-supabase-plain original' },
-  { name: 'Firebase', icon: 'devicon-firebase-plain original' },
+const techStack: { name: string; icon: IconType }[] = [
+  { name: "HTML", icon: SiHtml5 },
+  { name: "CSS", icon: SiCss3 },
+  { name: "JavaScript", icon: SiJavascript },
+  { name: "TypeScript", icon: SiTypescript },
+  { name: "PHP", icon: SiPhp },
+  { name: "Python", icon: SiPython },
+  { name: "React", icon: SiReact },
+  { name: "Next.js", icon: SiNextdotjs },
+  { name: "Astro", icon: SiAstro },
+  { name: "Tailwind CSS", icon: SiTailwindcss },
+  { name: "Laravel", icon: SiLaravel },
+  { name: "Pyramid", icon: TbPyramid },
+  { name: "PyTorch", icon: SiPytorch },
+  { name: "MySQL", icon: SiMysql },
+  { name: "PostgreSQL", icon: SiPostgresql },
+  { name: "MongoDB", icon: SiMongodb },
+  { name: "Prisma", icon: SiPrisma },
+  { name: "Drizzle", icon: SiDrizzle },
+  { name: "Supabase", icon: SiSupabase },
+  { name: "Firebase", icon: SiFirebase },
 ];
 
+const LogoMarquee = () => {
+  const reduceMotion = usePrefersReducedMotion();
 
-const LogoMarquee = () => (
-  <div className="flex w-full items-center justify-center">
-    <Marquee className="py-2">
-      <MarqueeContent>
-        {techStack.map((tech, index) => (
-          <MarqueeItem
-            key={index}
-            className="mx-2 flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[0.75rem] text-white/80 backdrop-blur-sm sm:px-4 sm:py-2 sm:text-sm"
+  return (
+    <section
+      id="stack"
+      aria-label="Tools and technologies"
+      className="border-b border-bone/20 py-5"
+    >
+      <div className="mx-auto flex max-w-[1600px] items-center gap-8 px-5 md:px-8 lg:px-12">
+        <span className="label-caps hidden shrink-0 text-bone/60 md:block">
+          Stack
+        </span>
+        <div className="sr-only">
+          <ul>
+            {techStack.map((tech) => (
+              <li key={tech.name}>{tech.name}</li>
+            ))}
+          </ul>
+        </div>
+        <Marquee className="min-w-0 flex-1" aria-hidden="true">
+          <MarqueeContent
+            speed={26}
+            gradient={false}
+            pauseOnHover
+            play={!reduceMotion}
           >
-            {tech.icon ? (
-              <i className={`${tech.icon} text-xl`}></i>
-            ) : (
-              <span className="font-semibold text-white/90">#</span>
-            )}
-
-            <span>{tech.name}</span>
-          </MarqueeItem>
-        ))}
-      </MarqueeContent>
-    </Marquee>
-  </div>
-);
+            {techStack.map((tech) => {
+              const Icon = tech.icon;
+              return (
+                <MarqueeItem
+                  key={tech.name}
+                  className="mx-5 flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-bone/70"
+                >
+                  <Icon className="h-4 w-4 shrink-0 text-bone" aria-hidden="true" />
+                  <span>{tech.name}</span>
+                  <span className="text-signal/55" aria-hidden="true">
+                    /
+                  </span>
+                </MarqueeItem>
+              );
+            })}
+          </MarqueeContent>
+        </Marquee>
+      </div>
+    </section>
+  );
+};
 
 export default LogoMarquee;

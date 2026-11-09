@@ -1,11 +1,11 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 /**
- * Word-by-word slide-up reveal. Shared by every headline that animates
- * one word at a time.
+ * Word-by-word slide-up reveal. Shared by headlines that animate one word
+ * at a time.
  */
 export const slideUpVariants: Variants = {
   initial: { y: "100%", opacity: 0 },
@@ -13,9 +13,9 @@ export const slideUpVariants: Variants = {
     y: "0%",
     opacity: 1,
     transition: {
-      duration: 0.3,
-      delay: 0.08 * i,
-      ease: "easeOut",
+      duration: 0.42,
+      delay: 0.055 * i,
+      ease: [0.16, 1, 0.3, 1],
     },
   }),
   closed: {
@@ -25,11 +25,11 @@ export const slideUpVariants: Variants = {
   },
 };
 
-const ACCENT_CLASS =
-  "bg-gradient-to-r from-purple-300 to-purple-400 bg-clip-text text-transparent";
-
-const UNDERLINE_CLASS =
-  "pointer-events-none absolute bottom-[-3px] left-0 h-[1.5px] w-full bg-gradient-to-r from-purple-400/60 via-purple-500/50 to-transparent";
+const reducedVariants: Variants = {
+  initial: { y: 0, opacity: 1 },
+  open: { y: 0, opacity: 1 },
+  closed: { y: 0, opacity: 1 },
+};
 
 type SplitWordsProps = {
   text: string;
@@ -47,9 +47,11 @@ export function SplitWords({
   isInView,
   isAccent,
   indexOffset = 0,
-  gapClassName = "mr-[3px]",
-  accentClassName = ACCENT_CLASS,
+  gapClassName = "mr-[0.24em]",
+  accentClassName = "text-signal",
 }: SplitWordsProps) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <>
       {text.split(" ").map((word, i) => {
@@ -60,11 +62,11 @@ export function SplitWords({
             key={`${word}-${i}`}
             className={cn(
               "relative inline-flex overflow-hidden align-top",
-              gapClassName
+              gapClassName,
             )}
           >
             <motion.span
-              variants={slideUpVariants}
+              variants={reduceMotion ? reducedVariants : slideUpVariants}
               custom={i + indexOffset}
               initial="initial"
               animate={isInView ? "open" : "closed"}
@@ -72,8 +74,6 @@ export function SplitWords({
             >
               {word}
             </motion.span>
-
-            {accent && <span className={UNDERLINE_CLASS} />}
           </span>
         );
       })}

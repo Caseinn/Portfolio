@@ -1,315 +1,293 @@
-  "use client";
+"use client";
 
-  import React, { useEffect, useRef, useState } from "react";
-  import Image from "next/image";
-  import gsap from "gsap";
-import { motion, Variants } from "framer-motion";
-import { projects } from "@/data";
-import { useIsDesktop } from "@/lib/use-media-query";
+import { useRef, useState } from "react";
+import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight } from "@phosphor-icons/react";
+import { projects, type Project } from "@/data";
+import { cn } from "@/lib/utils";
 
-  type Project = {
-    title: string;
-    src: string;
-    role?: string;
-    url?: string;
-  };
+const GRID_COLUMNS =
+  "grid-cols-[3.5rem_minmax(0,1fr)_9rem_7rem_1.5rem]";
 
-  const scaleVariant: Variants = {
-    initial: { scale: 0 },
-    enter: {
-      scale: 1,
-      transition: { duration: 0.35, ease: [0.76, 0, 0.24, 1] },
-    },
-    closed: {
-      scale: 0,
-      transition: { duration: 0.25, ease: [0.32, 0, 0.67, 0] },
-    },
-  };
+const padNumber = (value: number) => String(value).padStart(2, "0");
 
-  function useIsTouch(): boolean {
-    const [isTouch, setIsTouch] = useState(false);
+const projectStatus = (project: Project) => (project.url ? "Live" : "Archive");
 
-    useEffect(() => {
-      if (typeof window === "undefined") return;
-      setIsTouch(
-        window.matchMedia("(pointer: coarse)").matches ||
-          navigator.maxTouchPoints > 0
-      );
-    }, []);
-
-    return isTouch;
-  }
-
-  function ProjectRow({
-    index,
-    title,
-    role,
-    url,
-    onHoverChange,
-  }: {
-    index: number;
-    title: string;
-    role?: string;
-    url?: string;
-    onHoverChange: (active: boolean, idx: number, x: number, y: number) => void;
-  }) {
-    const handleEnter = (e: React.MouseEvent<HTMLElement>) =>
-      onHoverChange(true, index, e.clientX, e.clientY);
-
-    const handleLeave = (e: React.MouseEvent<HTMLElement>) =>
-      onHoverChange(false, index, e.clientX, e.clientY);
-
-    const commonProps = {
-      onMouseEnter: handleEnter,
-      onMouseLeave: handleLeave,
-      className: `group relative flex w-full items-center justify-between rounded-3xl 
-        border border-white/10 bg-white/[0.03] px-6 py-8
-        transition-all duration-300 hover:bg-white/[0.05]${url ? " cursor-pointer" : ""}`,
-    };
-
-    const content = (
-      <>
-        {/* Left: Title */}
-        <h3
-          className="
-            text-3xl md:text-[40px] font-semibold text-white
-            transition-colors duration-300
-            group-hover:text-purple-300
-          "
-        >
-          {title}
-        </h3>
-
-        {/* Right: Role */}
-        <p className="mt-1 text-sm uppercase tracking-[0.25em] text-white/50 text-right">
-          {role ?? "Development"}
-        </p>
-      </>
-    );
-
-    if (url) {
-      return (
-        <a
-          {...commonProps}
-          href={url}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          {content}
-        </a>
-      );
-    }
-
-    return <div {...commonProps}>{content}</div>;
-  }
-
-  function ProjectCard({ project }: { project: Project }) {
-    const isDisabled = !project.url;
-    const roleLabel = project.role ?? "Development";
-
-    const cardContent = (
-      <>
-        <div className="relative aspect-[16/10] overflow-hidden">
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const content = (
+    <>
+      <div className="border-[5px] border-frame bg-wall-2 p-1.5 shadow-[0_18px_45px_rgba(0,0,0,0.28)]">
+        <div className="relative aspect-[16/10] overflow-hidden bg-wall-2">
           <Image
             src={project.src}
             alt={project.title}
             fill
-            className={`object-cover transition-transform duration-300 ${!isDisabled ? "group-hover:scale-105" : ""}`}
+            sizes="82vw"
+            className={cn(
+              "object-cover transition-transform duration-500",
+              project.url && "group-hover:scale-[1.025]",
+            )}
           />
           {!project.url && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-              <span className="text-xs uppercase tracking-widest text-white/60">No link</span>
+            <div className="absolute inset-0 flex items-center justify-center bg-wall/72">
+              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-bone/70">
+                Archive / no public link
+              </span>
             </div>
           )}
         </div>
-        <div className="bg-white/[0.03] p-4 space-y-1">
-          <h3 className={`font-semibold text-white ${isDisabled ? "text-white/60" : ""}`}>
+      </div>
+
+      <div className="mt-3 flex items-start justify-between gap-5 border-t border-bone/20 pt-3">
+        <div>
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-signal/80">
+            {padNumber(index + 1)}
+          </p>
+          <h3 className="mt-1 text-xl font-medium uppercase tracking-[-0.03em] text-bone">
             {project.title}
           </h3>
-          <p className="text-xs uppercase tracking-[0.25em] text-white/50">
-            {roleLabel}
-          </p>
         </div>
-      </>
-    );
+        <span className="mt-0.5 shrink-0 font-mono text-[9px] uppercase tracking-[0.18em] text-bone/60">
+          {projectStatus(project)}
+        </span>
+      </div>
+    </>
+  );
 
-    if (isDisabled) {
-      return (
-        <div className="w-[85%] flex-shrink-0 snap-start cursor-not-allowed opacity-60">
-          <div className="overflow-hidden rounded-2xl border border-white/10">
-            {cardContent}
+  const className = cn(
+    "group block w-[82vw] max-w-[380px] shrink-0 snap-start",
+    project.url ? "cursor-pointer" : "cursor-default",
+  );
+
+  if (!project.url) {
+    return <div className={className}>{content}</div>;
+  }
+
+  return (
+    <a
+      href={project.url}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={className}
+    >
+      {content}
+    </a>
+  );
+}
+
+export default function ProjectsSection() {
+  const [active, setActive] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const movePreview = (clientX: number, clientY: number) => {
+    const width = 380;
+    const height = 286;
+    setPreviewPosition({
+      x: Math.max(12, Math.min(clientX + 26, window.innerWidth - width - 12)),
+      y: Math.max(12, Math.min(clientY - 120, window.innerHeight - height - 12)),
+    });
+  };
+
+  const handleEnter = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    index: number,
+  ) => {
+    setActive(index);
+    movePreview(event.clientX, event.clientY);
+  };
+
+  const handleMove = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    movePreview(event.clientX, event.clientY);
+  };
+
+  const handleCarouselScroll = () => {
+    const container = carouselRef.current;
+    if (!container) return;
+    const firstCard = container.firstElementChild as HTMLElement | null;
+    if (!firstCard) return;
+    const step = firstCard.offsetWidth + 20;
+    const nextIndex = Math.min(
+      Math.round(container.scrollLeft / step),
+      projects.length - 1,
+    );
+    setActiveIndex(nextIndex);
+  };
+
+  const goToCard = (index: number) => {
+    const container = carouselRef.current;
+    const card = container?.children[index] as HTMLElement | undefined;
+    if (!container || !card) return;
+    container.scrollTo({
+      left: card.offsetLeft - 20,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <section
+      id="projects"
+      className="border-b border-bone/20 px-5 py-24 md:px-8 md:py-32 lg:px-12"
+    >
+      <div className="mx-auto w-full max-w-[1600px]">
+        <div className="flex flex-col gap-7 border-b border-bone/20 pb-8 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="display-tight text-[clamp(2.8rem,5.6vw,5.2rem)] font-semibold uppercase text-bone">
+              Recent projects
+            </h2>
           </div>
         </div>
-      );
-    }
 
-    return (
-      <a
-        href={project.url}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="group w-[85%] flex-shrink-0 snap-start cursor-pointer"
-      >
-        <div className="overflow-hidden rounded-2xl border border-white/10 transition-all duration-300 hover:border-white/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] active:scale-[0.98]">
-          {cardContent}
-        </div>
-      </a>
-    );
-  }
+        {/* Desktop checklist */}
+        <div className="mt-2 hidden md:block">
+          <div className={`grid ${GRID_COLUMNS} gap-4 border-b border-bone/20 py-3 font-mono text-[9px] uppercase tracking-[0.18em] text-bone/60`}>
+            <span>No.</span>
+            <span>Work</span>
+            <span>Discipline</span>
+            <span>Status</span>
+            <span />
+          </div>
 
-  function DotsIndicator({ total, activeIndex }: { total: number; activeIndex: number }) {
-    return (
-      <div className="flex items-center justify-center gap-2 mt-6" role="tablist">
-        {Array.from({ length: total }).map((_, i) => (
-          <button
-            key={i}
-            role="tab"
-            aria-selected={i === activeIndex}
-            aria-label={`Go to project ${i + 1}`}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === activeIndex
-                ? "w-6 bg-purple-400"
-                : "w-2 bg-white/20 hover:bg-white/40"
-            }`}
-          />
-        ))}
-      </div>
-    );
-  }
+          {projects.map((project, index) => {
+            const rowClassName = `group grid ${GRID_COLUMNS} items-baseline gap-4 border-b border-bone/20 py-6`;
+            const rowContent = (
+              <>
+                <span className="font-mono text-[10px] tracking-[0.16em] text-signal/85">
+                  {padNumber(index + 1)}
+                </span>
+                <h3 className="text-[clamp(1.6rem,3.2vw,3rem)] font-medium uppercase leading-none tracking-[-0.035em] text-bone transition-colors duration-200 group-hover:text-signal">
+                  {project.title}
+                </h3>
+                <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-bone/65">
+                  {project.role ?? "Development"}
+                </span>
+                <span
+                  className={cn(
+                    "flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em]",
+                    project.url ? "text-bone/65" : "text-bone/55",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "inline-block h-1.5 w-1.5",
+                      project.url ? "bg-signal" : "border border-bone/30",
+                    )}
+                  />
+                  {projectStatus(project)}
+                </span>
+                <span className="justify-self-end text-bone/55 transition-colors duration-200 group-hover:text-signal">
+                  {project.url ? (
+                    <ArrowUpRight size={15} weight="bold" />
+                  ) : (
+                    <span className="font-mono text-[11px]">—</span>
+                  )}
+                </span>
+              </>
+            );
 
-  function ProjectCarousel({ projects }: { projects: Project[] }) {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const containerRef = useRef<HTMLDivElement>(null);
+            if (!project.url) {
+              return (
+                <div key={project.title} className={rowClassName}>
+                  {rowContent}
+                </div>
+              );
+            }
 
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const { scrollLeft, offsetWidth } = containerRef.current;
-      const cardWidth = offsetWidth / 0.85;
-      const index = Math.round(scrollLeft / cardWidth);
-      setActiveIndex(Math.min(index, projects.length - 1));
-    };
-
-    return (
-      <div className="relative w-full">
-        <div
-          ref={containerRef}
-          onScroll={handleScroll}
-          className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-[7.5%]"
-        >
-          {projects.map((project) => (
-            <ProjectCard key={project.title} project={project} />
-          ))}
-        </div>
-        <DotsIndicator total={projects.length} activeIndex={activeIndex} />
-      </div>
-    );
-  }
-
-  export default function ProjectsSection() {
-    const isTouch = useIsTouch();
-    const isDesktop = useIsDesktop();
-    const [modal, setModal] = useState({ active: false, index: 0 });
-    const modalRef = useRef<HTMLDivElement>(null);
-
-    const move = (x: number, y: number) => {
-      const el = modalRef.current;
-      if (!el) return;
-
-      gsap.to(el, {
-        left: x,
-        top: y,
-        duration: 0.18,
-        ease: "power3.out",
-      });
-    };
-
-    const handleHover = (
-      active: boolean,
-      index: number,
-      x: number,
-      y: number
-    ) => {
-      setModal({ active, index });
-      move(x, y);
-    };
-
-    useEffect(() => {
-      if (!modal.active) return;
-
-      const onMove = (e: MouseEvent) => move(e.clientX, e.clientY);
-      window.addEventListener("mousemove", onMove);
-
-      return () => window.removeEventListener("mousemove", onMove);
-    }, [modal.active]);
-
-    return (
-      <section
-        id="projects"
-        className="relative flex flex-col items-center px-4 py-20 md:px-6"
-        onMouseMove={(e) => modal.active && move(e.clientX, e.clientY)}
-      >
-        {/* Section Title */}
-        <h2 className="text-3xl md:text-4xl font-semibold text-white mb-12 tracking-tight">
-          Recent Projects
-        </h2>
-
-        {/* Desktop List */}
-        {isDesktop && (
-        <div className="mx-auto w-full max-w-6xl space-y-6 hidden md:block">
-          {projects.map((p, i) => (
-            <ProjectRow
-              key={p.title}
-              index={i}
-              title={p.title}
-              role={p.role}
-              url={p.url}
-              onHoverChange={handleHover}
-            />
-          ))}
-        </div>
-        )}
-
-        {/* Mobile Carousel */}
-        {!isDesktop && (
-        <div className="mx-auto mt-10 w-full md:hidden">
-          <ProjectCarousel projects={projects} />
-        </div>
-        )}
-
-        {/* Hover Modal */}
-        {!isTouch && (
-          <div
-            ref={modalRef}
-            className="pointer-events-none fixed z-40 -translate-x-1/2 -translate-y-1/2"
-            style={{ top: "50%", left: "50%" }}
-          >
-            <motion.div
-              variants={scaleVariant}
-              initial="initial"
-              animate={modal.active ? "enter" : "closed"}
-              className="h-[240px] w-[380px] overflow-hidden rounded-3xl border border-white/15 
-              bg-black/80 shadow-[0_25px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl"
-            >
-              <div
-                className="relative h-full w-full transition-[top] duration-500 
-                [transition-timing-function:cubic-bezier(0.76,0,0.24,1)]"
-                style={{ top: `${modal.index * -100}%` }}
+            return (
+              <a
+                key={project.title}
+                href={project.url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className={cn(rowClassName, "cursor-pointer")}
+                onMouseEnter={(event) => handleEnter(event, index)}
+                onMouseMove={handleMove}
+                onMouseLeave={() => setActive(null)}
               >
-                {projects.map((p, i) => (
-                  <div key={i} className="flex h-full w-full">
-                    <Image
-                      src={p.src}
-                      alt={p.title}
-                      width={380}
-                      height={240}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+                {rowContent}
+              </a>
+            );
+          })}
+        </div>
+
+        {/* Mobile plates */}
+        <div className="mt-10 md:hidden">
+          <div
+            ref={carouselRef}
+            onScroll={handleCarouselScroll}
+            className="scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5"
+          >
+            {projects.map((project, index) => (
+              <ProjectCard
+                key={project.title}
+                project={project}
+                index={index}
+              />
+            ))}
           </div>
+
+          <div className="mt-6 flex items-center justify-between">
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-bone/60">
+              {padNumber(activeIndex + 1)} / {padNumber(projects.length)}
+            </span>
+            <div className="flex items-center gap-2" aria-label="Project slides">
+              {projects.map((project, index) => (
+                <button
+                  key={project.title}
+                  type="button"
+                  aria-current={index === activeIndex ? "true" : undefined}
+                  aria-label={`Show ${project.title}`}
+                  onClick={() => goToCard(index)}
+                  className={cn(
+                    "h-1.5 transition-all duration-300",
+                    index === activeIndex
+                      ? "w-7 bg-signal"
+                      : "w-3 bg-bone/50 hover:bg-bone/70",
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hover plate */}
+      <AnimatePresence>
+        {active !== null && (
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{ left: previewPosition.x, top: previewPosition.y }}
+            className="pointer-events-none fixed z-50 hidden md:block"
+            aria-hidden="true"
+          >
+            <div className="w-[380px] border-[5px] border-frame bg-wall-2 p-1.5 shadow-[0_26px_60px_rgba(0,0,0,0.5)]">
+              <div className="relative aspect-[16/10] overflow-hidden bg-wall-2">
+                <Image
+                  src={projects[active].src}
+                  alt=""
+                  fill
+                  sizes="380px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4 px-2 pb-1 pt-2.5 font-mono text-[9px] uppercase tracking-[0.16em]">
+                <span className="truncate text-bone/70">
+                  {padNumber(active + 1)} / {projects[active].title}
+                </span>
+                <span className="shrink-0 text-signal">
+                  {projectStatus(projects[active])}
+                </span>
+              </div>
+            </div>
+          </motion.div>
         )}
-      </section>
-    );
-  }
+      </AnimatePresence>
+    </section>
+  );
+}

@@ -7,15 +7,16 @@ import LogoMarquee from "@/components/marquee-section";
 
 export default function Home() {
   return (
-    <main className="relative bg-black-100 flex justify-center items-center flex-col mx-auto overflow-clip">
-      <div className="max-w-8xl w-full">
-        <Navbar/>
+    <>
+      <Navbar />
+
+      <main className="relative overflow-clip bg-wall">
         <Hero />
-        <LogoMarquee/>
+        <LogoMarquee />
         <Description />
         <Projects />
         <Footer />
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
