@@ -13,7 +13,7 @@
     "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
-    "@radix-ui/react-popover": "^1.1.15",
+    "@phosphor-icons/react": "^2.1.10",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.24",
     "gsap": "^3.13.0",
