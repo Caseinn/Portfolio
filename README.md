@@ -4,7 +4,7 @@ Personal portfolio for Dito Rifki Irawan (Caseinn), web developer in Lampung, In
 
 ## Stack
 
-Next.js 16 (App Router, Turbopack), React 19, Tailwind CSS 4, TypeScript, Framer Motion, GSAP, Lenis for smooth scroll.
+Next.js 16 (App Router, Turbopack), React 19, Tailwind CSS 4, TypeScript, Framer Motion, Lenis for smooth scroll.
 
 ## Local development
 
@@ -27,17 +27,15 @@ Git hooks install themselves via the `prepare` script (`.githooks/`).
 
 | What | Where |
 | --- | --- |
-| Hero headline and intro | `components/hero-section.tsx:33` |
-| About headline and bio | `components/description-section.tsx:7` (`PHRASE`) and the subtext at line 51 |
-| Contact headline and email | `components/ui/footer.tsx:17` (`HEADLINE`) and the `mailto:` at line 122 |
-| Project list | `data/index.ts:28` |
-| Tech stack marquee | `components/marquee-section.tsx:9` |
-| SEO descriptions | `app/layout.tsx:10` (`siteDescription`) |
+| Hero headline and intro | `components/hero-section.tsx` |
+| About headline and bio | `components/description-section.tsx` (`PHRASE` and the subtext) |
+| Contact headline | `components/ui/footer.tsx` |
+| Contact email and site metadata | `lib/site.ts` |
+| Project list | `data/index.ts` (`projects`) |
+| Social links | `lib/site.ts` (`socialLinks`) |
+| Tech stack marquee | `components/marquee-section.tsx` |
 
-The animated headlines highlight specific words, so accent lists need to match:
-
-- `ACCENT` in `description-section.tsx` holds normalized words (`interface,` matches `interface`).
-- `ACCENTED_HEADLINE_WORDS` in `footer.tsx` holds word indexes, not words.
+The animated about headline highlights specific words: `ACCENT` in `description-section.tsx` holds normalized words, so punctuation is ignored (`interface,` matches `interface`).
 
 ## Deployment
 
