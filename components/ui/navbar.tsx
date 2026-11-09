@@ -1,176 +1,218 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { navItems } from "@/data";
-import {
-  useMediaQuery,
-  usePrefersReducedMotion,
-} from "@/lib/use-media-query";
-import type { IconType } from "react-icons";
+  ArrowUpRight,
+  Asterisk,
+  Briefcase,
+  EnvelopeSimple,
+  List,
+  UserCircle,
+  X,
+} from "@phosphor-icons/react";
+import { cn, navControlClass } from "@/lib/utils";
+import { contactEmail } from "@/lib/site";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
-export const Navbar = ({ className }: { className?: string }) => {
-  const { scrollYProgress } = useScroll();
-  const [compact, setCompact] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const reducedMotion = usePrefersReducedMotion();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+const links = [
+  { name: "About", href: "#about", id: "about", icon: UserCircle },
+  { name: "Works", href: "#projects", id: "projects", icon: Briefcase },
+  { name: "Contact", href: "#contact", id: "contact", icon: EnvelopeSimple },
+];
 
-  useMotionValueEvent(scrollYProgress, "change", () => {
-    setCompact(scrollYProgress.get() > 0.03);
-  });
+export function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("");
 
-  // On small screens the bar is full-bleed via `w-full`, so only the desktop
-  // width is animated.
-  const targetWidth = isDesktop
-    ? compact
-      ? "min(48rem, 72vw)"
-      : "min(70rem, 90vw)"
-    : undefined;
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const probe = () => {
+      const marker = window.innerHeight * 0.35;
+      let current = "";
+
+      for (const link of links) {
+        const el = document.getElementById(link.id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= marker && rect.bottom > marker) {
+          current = link.id;
+        }
+      }
+
+      const atBottom =
+        window.scrollY + window.innerHeight >=
+        document.documentElement.scrollHeight - 2;
+      if (atBottom) current = links[links.length - 1].id;
+
+      setActive(current);
+      frame = 0;
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(probe);
+    };
+
+    probe();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
 
   return (
-    <div
+    <header
       className={cn(
-        "pointer-events-none fixed inset-x-0 z-[5000] flex justify-center",
-        "top-3 sm:top-4 md:top-5 px-3 md:px-4",
+        "fixed inset-x-0 top-0 z-[100] border-b transition-colors duration-300",
+        scrolled || open
+          ? "border-bone/20 bg-wall/95"
+          : "border-transparent bg-transparent",
       )}
     >
-      <motion.nav
-        aria-label="Main navigation"
-        animate={{ width: targetWidth }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 30,
-          ...(reducedMotion ? { duration: 0.001 } : {}),
-        }}
-        className={cn(
-          "pointer-events-auto",
-          "w-full md:w-auto",
-          "max-w-[580px] md:max-w-5xl",
-          "rounded-full border border-white/10 bg-black/50",
-          "backdrop-blur-2xl shadow-[0_22px_60px_rgba(0,0,0,0.75)]",
-          "flex items-center justify-between gap-3 md:gap-6",
-          "py-2.5 px-[18px] md:py-3 md:px-6",
-          "transition-colors duration-300",
-          "whitespace-nowrap",
-          className,
-        )}
-      >
-        {/* Brand – clickable */}
-        <Link href="/" className="flex items-center gap-2 pl-1 pr-2 md:px-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/80 hover:text-white transition md:text-[11px]">
-            Caseinn
+      <div className="mx-auto flex h-[68px] max-w-[1600px] items-center justify-between px-5 md:px-8 lg:px-12">
+        <Link
+          href="#home"
+          onClick={() => setOpen(false)}
+          className="group flex items-center gap-2.5"
+        >
+          <Asterisk
+            size={18}
+            weight="bold"
+            className="text-signal transition-transform duration-500 group-hover:rotate-90"
+          />
+          <span className="flex items-baseline gap-3">
+            <span className="text-[13px] font-semibold uppercase tracking-[0.22em] text-bone">
+              Caseinn
+            </span>
+            <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-bone/60 sm:inline">
+              Portfolio
+            </span>
           </span>
         </Link>
 
-        {/* Desktop Nav – aligned right */}
-        <div className="hidden md:flex flex-1 items-center justify-end gap-3 text-sm">
-          {navItems.map((item, i) => {
-            const Icon = item.icon as IconType | undefined;
+        <nav aria-label="Main navigation" className="hidden items-center gap-8 md:flex">
+          {links.map((link) => {
+            const isActive = active === link.id;
+            const Icon = link.icon;
             return (
-              <div
-                key={item.name}
-                className="relative"
-                onMouseEnter={() => setHoveredIndex(i)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                <Link
-                  href={item.link}
-                  className={cn(
-                    "relative z-10 flex items-center gap-2 rounded-full px-3.5 py-1.5",
-                    "text-neutral-300 transition-all duration-200 ease-out",
-                    "hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
-                  )}
-                >
-                  {Icon && <Icon size={15} className="text-white/70" />}
-                  <span>{item.name}</span>
-                </Link>
-
-                {hoveredIndex === i && (
-                  <motion.span
-                    layoutId="nav-hover-pill"
-                    className="absolute inset-0 rounded-full bg-white/10"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  />
+              <Link
+                key={link.name}
+                href={link.href}
+                aria-current={isActive ? "location" : undefined}
+                className={cn(
+                  "group relative flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] transition-colors hover:text-bone",
+                  isActive ? "text-bone" : "text-bone/65",
                 )}
-              </div>
+              >
+                <Icon
+                  size={13}
+                  weight={isActive ? "fill" : "bold"}
+                  className={cn(
+                    "transition-colors",
+                    isActive ? "text-signal" : "text-signal/80",
+                  )}
+                />
+                {link.name}
+              </Link>
             );
           })}
-        </div>
+        </nav>
 
-        {/* Mobile Menu Trigger */}
-        <div className="md:hidden">
-          <Popover open={menuOpen} onOpenChange={setMenuOpen}>
-            <PopoverTrigger asChild>
-              <button
-                type="button"
-                aria-label="Open navigation menu"
-                className={cn(
-                  "inline-flex h-9 w-9 items-center justify-center rounded-full",
-                  "bg-white/5 text-white transition hover:bg-white/10",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80",
-                )}
-              >
-                {menuOpen ? (
-                  <X size={18} strokeWidth={2} />
-                ) : (
-                  <Menu size={20} strokeWidth={1.8} />
-                )}
-              </button>
-            </PopoverTrigger>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <a
+            href={`mailto:${contactEmail}`}
+            className={cn(
+              "hidden gap-2 px-4 font-mono text-[10px] uppercase tracking-[0.18em] md:flex",
+              navControlClass,
+            )}
+          >
+            Enquire
+            <ArrowUpRight size={12} weight="bold" />
+          </a>
 
-            <PopoverContent
-              side="bottom"
-              align="end"
-              sideOffset={13}
-              alignOffset={-12.8}
-              className={cn(
-                "w-[90vw] max-w-sm",
-                "rounded-2xl border border-white/10",
-                "bg-black/60 backdrop-blur-2xl",
-                "shadow-[0_22px_60px_rgba(0,0,0,0.75)]",
-                "px-4 py-6",
-              )}
-            >
-              <div className="flex flex-col items-center gap-3">
-                <nav className="flex w-full flex-col items-stretch gap-2">
-                  {navItems.map((item) => {
-                    const Icon = item.icon as IconType | undefined;
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.link}
-                        onClick={() => setMenuOpen(false)}
-                        className={cn(
-                          "w-full rounded-2xl px-4 py-2.5",
-                          "flex items-center justify-center gap-3",
-                          "text-center text-[15px] font-medium text-white/85",
-                          "transition hover:bg-white/5 hover:text-white",
-                        )}
-                      >
-                        {Icon && <Icon size={18} className="text-white/85" />}
-                        <span>{item.name}</span>
-                      </Link>
-                    );
-                  })}
-                </nav>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+            className={cn("inline-flex w-10 md:hidden", navControlClass)}
+          >
+            {open ? <X size={18} weight="bold" /> : <List size={19} weight="bold" />}
+          </button>
         </div>
-      </motion.nav>
-    </div>
+      </div>
+
+      {open && (
+        <div
+          id="mobile-menu"
+          className="border-t border-bone/20 bg-wall px-5 pb-10 pt-8 md:hidden"
+        >
+          <nav aria-label="Mobile navigation" className="flex flex-col">
+            {links.map((link) => {
+              const isActive = active === link.id;
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={isActive ? "location" : undefined}
+                  className={cn(
+                    "flex items-center justify-between border-b border-bone/15 py-5 text-3xl font-medium uppercase tracking-[-0.03em]",
+                    isActive ? "text-signal" : "text-bone",
+                  )}
+                >
+                  <span className="flex items-center gap-4">
+                    <Icon
+                      size={28}
+                      weight={isActive ? "fill" : "bold"}
+                      className={isActive ? "text-signal" : "text-bone/50"}
+                    />
+                    {link.name}
+                  </span>
+                  <ArrowUpRight
+                    size={24}
+                    weight="bold"
+                    className={isActive ? "text-signal" : "text-bone/30"}
+                  />
+                </Link>
+              );
+            })}
+          </nav>
+          <a
+            href={`mailto:${contactEmail}`}
+            className="mt-8 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-bone/70"
+          >
+            {contactEmail}
+            <ArrowUpRight size={13} weight="bold" />
+          </a>
+        </div>
+      )}
+    </header>
   );
-};
+}
