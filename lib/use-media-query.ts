@@ -31,23 +31,6 @@ export function useMediaQuery(query: string): boolean {
 }
 
 export const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-export const COARSE_POINTER_QUERY = "(pointer: coarse)";
 
 export const usePrefersReducedMotion = () =>
   useMediaQuery(REDUCED_MOTION_QUERY);
-
-export const useCoarsePointer = () => useMediaQuery(COARSE_POINTER_QUERY);
-
-/**
- * Breakpoint check that reports `true` until the query has been resolved on
- * the client. Use this when picking which of two server-rendered layouts to
- * mount, so wide viewports never render the narrow layout first.
- */
-export function useIsDesktop(query = "(min-width: 768px)") {
-  const matches = useMediaQuery(query);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-
-  return mounted ? matches : true;
-}
