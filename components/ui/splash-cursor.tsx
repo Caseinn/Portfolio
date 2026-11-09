@@ -7,6 +7,16 @@ interface ColorRGB {
   b: number;
 }
 
+function hexToRgb(value: string): ColorRGB | null {
+  const match = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(value.trim());
+  if (!match) return null;
+  return {
+    r: parseInt(match[1], 16) / 255,
+    g: parseInt(match[2], 16) / 255,
+    b: parseInt(match[3], 16) / 255,
+  };
+}
+
 interface SplashCursorProps {
   SIM_RESOLUTION?: number;
   DYE_RESOLUTION?: number;
@@ -56,17 +66,17 @@ type Format = { internalFormat: number; format: number };
 
 export default function SplashCursor({
   SIM_RESOLUTION = 128,
-  DYE_RESOLUTION = 1440,
+  DYE_RESOLUTION = 1024,
   CAPTURE_RESOLUTION = 512,
-  DENSITY_DISSIPATION = 3.5,
-  VELOCITY_DISSIPATION = 2,
+  DENSITY_DISSIPATION = 3.2,
+  VELOCITY_DISSIPATION = 2.0,
   PRESSURE = 0.1,
   PRESSURE_ITERATIONS = 20,
   CURL = 3,
-  SPLAT_RADIUS = 0.1,
-  SPLAT_FORCE = 5000,
-  SHADING = true,
-  COLOR_UPDATE_SPEED = 10,
+  SPLAT_RADIUS = 0.19,
+  SPLAT_FORCE = 4500,
+  SHADING = false,
+  COLOR_UPDATE_SPEED = 1.5,
   BACK_COLOR = { r: 0.5, g: 0, b: 0 },
   TRANSPARENT = true,
 }: SplashCursorProps) {
@@ -77,6 +87,26 @@ export default function SplashCursor({
     if (!canvas) return;
 
     const pointers: Pointer[] = [pointerPrototype()];
+
+    let palette: ColorRGB[] = [
+      { r: 1, g: 0.36, b: 0.21 },
+      { r: 1, g: 0.36, b: 0.21 },
+      { r: 0.93, g: 0.91, b: 0.86 },
+    ];
+
+    const readPalette = () => {
+      const styles = getComputedStyle(document.documentElement);
+      const signal = hexToRgb(styles.getPropertyValue("--signal"));
+      const bone = hexToRgb(styles.getPropertyValue("--bone"));
+      if (signal && bone) palette = [signal, signal, bone];
+    };
+
+    const themeObserver = new MutationObserver(readPalette);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    readPalette();
 
     const config = {
       SIM_RESOLUTION: SIM_RESOLUTION!,
@@ -254,7 +284,6 @@ export default function SplashCursor({
       gl.shaderSource(shader, shaderSource);
       gl.compileShader(shader);
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        // eslint-disable-next-line no-console
         console.trace(gl.getShaderInfoLog(shader));
       }
       return shader;
@@ -271,7 +300,6 @@ export default function SplashCursor({
       gl.attachShader(program, fragmentShader);
       gl.linkProgram(program);
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        // eslint-disable-next-line no-console
         console.trace(gl.getProgramInfoLog(program));
       }
       return program;
@@ -1072,9 +1100,9 @@ export default function SplashCursor({
 
     function clickSplat(pointer: Pointer) {
       const color = generateColor();
-      color.r *= 10;
-      color.g *= 10;
-      color.b *= 10;
+      color.r *= 6;
+      color.g *= 6;
+      color.b *= 6;
       const dx = 10 * (Math.random() - 0.5);
       const dy = 30 * (Math.random() - 0.5);
       splat(pointer.texcoordX, pointer.texcoordY, dx, dy, color);
@@ -1157,56 +1185,8 @@ export default function SplashCursor({
     }
 
     function generateColor(): ColorRGB {
-      const c = HSVtoRGB(Math.random(), 1.0, 1.0);
-      c.r *= 0.15;
-      c.g *= 0.15;
-      c.b *= 0.15;
-      return c;
-    }
-
-    function HSVtoRGB(h: number, s: number, v: number): ColorRGB {
-      let r = 0,
-        g = 0,
-        b = 0;
-      const i = Math.floor(h * 6);
-      const f = h * 6 - i;
-      const p = v * (1 - s);
-      const q = v * (1 - f * s);
-      const t = v * (1 - (1 - f) * s);
-
-      switch (i % 6) {
-        case 0:
-          r = v;
-          g = t;
-          b = p;
-          break;
-        case 1:
-          r = q;
-          g = v;
-          b = p;
-          break;
-        case 2:
-          r = p;
-          g = v;
-          b = t;
-          break;
-        case 3:
-          r = p;
-          g = q;
-          b = v;
-          break;
-        case 4:
-          r = t;
-          g = p;
-          b = v;
-          break;
-        case 5:
-          r = v;
-          g = p;
-          b = q;
-          break;
-      }
-      return { r, g, b };
+      const c = palette[Math.floor(Math.random() * palette.length)];
+      return { r: c.r * 0.12, g: c.g * 0.12, b: c.b * 0.12 };
     }
 
     function wrap(value: number, min: number, max: number) {
@@ -1290,6 +1270,10 @@ export default function SplashCursor({
         updatePointerUpData(pointer);
       }
     });
+
+    return () => {
+      themeObserver.disconnect();
+    };
   }, [
     SIM_RESOLUTION,
     DYE_RESOLUTION,
