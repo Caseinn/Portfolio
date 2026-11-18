@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   Asterisk,
@@ -47,10 +48,7 @@ export function Navbar() {
       for (const link of links) {
         const el = document.getElementById(link.id);
         if (!el) continue;
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= marker && rect.bottom > marker) {
-          current = link.id;
-        }
+        if (el.getBoundingClientRect().top <= marker) current = link.id;
       }
 
       const atBottom =
@@ -117,7 +115,10 @@ export function Navbar() {
           </span>
         </Link>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-8 md:flex">
+        <nav
+          aria-label="Main navigation"
+          className="hidden items-center gap-8 md:flex"
+        >
           {links.map((link) => {
             const isActive = active === link.id;
             const Icon = link.icon;
@@ -140,6 +141,15 @@ export function Navbar() {
                   )}
                 />
                 {link.name}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-indicator"
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -bottom-2 h-px bg-signal"
+                    style={{ willChange: "transform" }}
+                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                )}
               </Link>
             );
           })}
