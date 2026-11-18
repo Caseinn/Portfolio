@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -23,20 +23,24 @@ const links = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const progressRef = useRef<HTMLDivElement | null>(null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     let frame = 0;
 
     const probe = () => {
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      setScrolled(window.scrollY > 24);
+
+      if (progressRef.current) {
+        const ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
+        progressRef.current.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+      }
+
       const marker = window.innerHeight * 0.35;
       let current = "";
 
@@ -165,6 +169,16 @@ export function Navbar() {
             {open ? <X size={18} weight="bold" /> : <List size={19} weight="bold" />}
           </button>
         </div>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] overflow-hidden"
+      >
+        <div
+          ref={progressRef}
+          className="h-full origin-left bg-signal will-change-transform"
+        />
       </div>
 
       {open && (
